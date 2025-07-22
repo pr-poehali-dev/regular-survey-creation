@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import Icon from "@/components/ui/icon";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const [formData, setFormData] = useState({
@@ -19,14 +20,82 @@ const Index = () => {
     city: '',
     postalCode: ''
   });
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const sendToBitrix24 = async (data: typeof formData) => {
+    const webhookUrl = 'https://b24-0vo5vw.bitrix24.ru/rest/1/q5be4cfha7ph0li8/';
+    
+    try {
+      const response = await fetch(`${webhookUrl}crm.lead.add.json`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fields: {
+            TITLE: `Новая заявка: ${data.firstName} ${data.lastName}`,
+            NAME: data.firstName,
+            LAST_NAME: data.lastName,
+            EMAIL: [{ VALUE: data.email, VALUE_TYPE: 'WORK' }],
+            PHONE: [{ VALUE: data.phone, VALUE_TYPE: 'WORK' }],
+            ADDRESS: data.address,
+            COMMENTS: `Дата рождения: ${data.birthDate}\nГород: ${data.city}\nИндекс: ${data.postalCode}`,
+            SOURCE_ID: 'WEB',
+            SOURCE_DESCRIPTION: 'Заявка с сайта-анкеты'
+          }
+        })
+      });
+
+      const result = await response.json();
+      
+      if (result.result) {
+        return { success: true, leadId: result.result };
+      } else {
+        throw new Error(result.error_description || 'Ошибка создания лида');
+      }
+    } catch (error) {
+      console.error('Ошибка отправки в Bitrix24:', error);
+      throw error;
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    
+    // Проверяем обязательные поля
+    if (!formData.firstName || !formData.lastName || !formData.email) {
+      setSubmitStatus('error');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    
+    try {
+      await sendToBitrix24(formData);
+      setSubmitStatus('success');
+      // Очищаем форму после успешной отправки
+      setFormData({
+        firstName: '',
+        lastName: '',
+        birthDate: '',
+        email: '',
+        phone: '',
+        address: '',
+        city: '',
+        postalCode: ''
+      });
+    } catch (error) {
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -73,6 +142,7 @@ const Index = () => {
                     onChange={(e) => handleInputChange('firstName', e.target.value)}
                     className="border-0 border-b-2 border-gray-200 rounded-none px-0 py-3 focus:border-black focus-visible:ring-0 transition-colors bg-transparent"
                     placeholder="Введите имя"
+                    required
                   />
                 </div>
                 <div className="space-y-2">
@@ -85,6 +155,7 @@ const Index = () => {
                     onChange={(e) => handleInputChange('lastName', e.target.value)}
                     className="border-0 border-b-2 border-gray-200 rounded-none px-0 py-3 focus:border-black focus-visible:ring-0 transition-colors bg-transparent"
                     placeholder="Введите фамилию"
+                    required
                   />
                 </div>
               </div>
@@ -129,6 +200,7 @@ const Index = () => {
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     className="border-0 border-b-2 border-gray-200 rounded-none px-0 py-3 focus:border-black focus-visible:ring-0 transition-colors bg-transparent"
                     placeholder="example@email.com"
+                    required
                   />
                 </div>
                 <div className="space-y-2">
@@ -186,13 +258,50 @@ const Index = () => {
             </CardContent>
           </Card>
 
+          {/* Status Messages */}
+          {submitStatus === 'success' && (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 animate-fade-in">
+              <div className="flex items-center gap-2">
+                <Icon name="CheckCircle" size={16} className="text-green-600" />
+                <p className="text-green-800 text-sm font-medium">
+                  Анкета успешно отправлена!
+                </p>
+              </div>
+              <p className="text-green-700 text-xs mt-1">
+                Данные переданы в Bitrix24, с вами свяжутся в ближайшее время.
+              </p>
+            </div>
+          )}
+
+          {submitStatus === 'error' && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 animate-fade-in">
+              <div className="flex items-center gap-2">
+                <Icon name="AlertCircle" size={16} className="text-red-600" />
+                <p className="text-red-800 text-sm font-medium">
+                  Ошибка отправки
+                </p>
+              </div>
+              <p className="text-red-700 text-xs mt-1">
+                Проверьте заполнение обязательных полей (имя, фамилия, email) и попробуйте снова.
+              </p>
+            </div>
+          )}
+
           {/* Submit Button */}
           <div className="flex justify-center pt-8">
             <Button 
               type="submit"
-              className="bg-black hover:bg-gray-800 text-white px-12 py-3 rounded-full transition-colors font-normal"
+              disabled={isSubmitting}
+              className="bg-black hover:bg-gray-800 disabled:bg-gray-400 text-white px-12 py-3 rounded-full transition-colors font-normal min-w-[200px]"
             >
-              Отправить анкету
+              {isSubmitting ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Отправляем...</span>
+                </div>
+              ) : (
+                'Отправить анкету'
+              )}
             </Button>
           </div>
         </form>
