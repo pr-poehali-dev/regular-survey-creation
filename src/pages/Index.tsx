@@ -216,11 +216,14 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-4">
+    <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-2xl mx-auto px-4">
         <form onSubmit={handleSubmit}>
-          {/* Логотип вверху */}
-          <div className="text-center mb-6">
+          {/* 3D Прогресс-бар */}
+          <StepProgressBar currentStep={currentStep} totalSteps={4} />
+
+          {/* Логотип по центру */}
+          <div className="text-center mb-8">
             <div className="inline-flex items-center gap-3 bg-white rounded-2xl px-8 py-4 shadow-lg border border-gray-100">
               <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
                 <Icon name="Banknote" size={24} className="text-white" />
@@ -231,9 +234,6 @@ const Index = () => {
               </div>
             </div>
           </div>
-
-          {/* Прогресс-бар с пульсацией */}
-          <StepProgressBar currentStep={currentStep} totalSteps={4} />
 
           <Card className="bg-white rounded-2xl shadow-lg border border-gray-200">
             
