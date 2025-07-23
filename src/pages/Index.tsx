@@ -19,12 +19,14 @@ interface FormData {
   // Контактные данные
   email: string;
   phone: string;
+  phoneCode: string;
   address: string;
   city: string;
   // Финансовые данные
   income: string;
   workplace: string;
-  loanAmount: string;
+  loanAmount: number;
+  loanTerm: number;
 }
 
 const Index = () => {
@@ -37,11 +39,13 @@ const Index = () => {
     passportNumber: '',
     email: '',
     phone: '',
+    phoneCode: '',
     address: '',
     city: '',
     income: '',
     workplace: '',
-    loanAmount: ''
+    loanAmount: 50000,
+    loanTerm: 30
   });
   
   const [currentStep, setCurrentStep] = useState(1);
@@ -50,6 +54,10 @@ const Index = () => {
   const [processingTimer, setProcessingTimer] = useState(60);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'processing' | 'approved' | 'rejected'>('idle');
   const [hasDebts, setHasDebts] = useState(false);
+  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
+  const [generatedCode, setGeneratedCode] = useState('');
+  const [codeTimer, setCodeTimer] = useState(0);
+  const [showCodeInput, setShowCodeInput] = useState(false);
   
   const { toast } = useToast();
 
@@ -70,8 +78,63 @@ const Index = () => {
     return () => clearInterval(interval);
   }, [isProcessing, processingTimer]);
 
-  const handleInputChange = (field: keyof FormData, value: string) => {
+  // Таймер для кода подтверждения
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (codeTimer > 0) {
+      interval = setInterval(() => {
+        setCodeTimer(prev => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [codeTimer]);
+
+  const handleInputChange = (field: keyof FormData, value: string | number) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Генерация кода подтверждения
+  const generatePhoneCode = () => {
+    const code = Math.floor(1000 + Math.random() * 9000).toString();
+    setGeneratedCode(code);
+    setShowCodeInput(true);
+    setCodeTimer(60);
+    
+    // Имитация отправки SMS
+    toast({
+      title: "Код отправлен!",
+      description: `SMS код: ${code} (для демо)`,
+      duration: 5000
+    });
+  };
+
+  // Проверка кода
+  const verifyPhoneCode = () => {
+    if (formData.phoneCode === generatedCode) {
+      setIsPhoneVerified(true);
+      setShowCodeInput(false);
+      toast({
+        title: "Телефон подтвержден!",
+        description: "Номер успешно верифицирован",
+        variant: "default"
+      });
+    } else {
+      toast({
+        title: "Неверный код",
+        description: "Проверьте правильность введенного кода",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Расчет переплаты и ежемесячного платежа
+  const calculateLoan = () => {
+    const rate = 0.02; // 2% в день
+    const totalAmount = formData.loanAmount * (1 + rate * formData.loanTerm);
+    const overpayment = totalAmount - formData.loanAmount;
+    const dailyPayment = totalAmount / formData.loanTerm;
+    
+    return { totalAmount, overpayment, dailyPayment };
   };
 
   const handleFileUpload = (file: File | undefined) => {
@@ -85,9 +148,9 @@ const Index = () => {
       case 2:
         return !!(formData.passportSeries && formData.passportNumber && formData.passportFile);
       case 3:
-        return !!(formData.email && formData.phone && formData.address && formData.city);
+        return !!(formData.email && formData.phone && isPhoneVerified && formData.address && formData.city);
       case 4:
-        return !!(formData.income && formData.workplace && formData.loanAmount);
+        return !!(formData.income && formData.workplace && formData.loanAmount > 0);
       default:
         return true;
     }
@@ -184,15 +247,20 @@ const Index = () => {
       passportNumber: '',
       email: '',
       phone: '',
+      phoneCode: '',
       address: '',
       city: '',
       income: '',
       workplace: '',
-      loanAmount: ''
+      loanAmount: 50000,
+      loanTerm: 30
     });
     setCurrentStep(1);
     setSubmitStatus('idle');
     setProcessingTimer(60);
+    setIsPhoneVerified(false);
+    setShowCodeInput(false);
+    setCodeTimer(0);
   };
 
   // Экран обработки заявки
@@ -519,14 +587,52 @@ const Index = () => {
                     </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-semibold text-gray-700">Телефон *</Label>
-                      <Input
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
-                        className="rounded-xl border-2 focus:border-blue-500 transition-all duration-300 transform focus:scale-105"
-                        placeholder="+7 (999) 123-45-67"
-                        required
-                      />
+                      <div className="flex gap-2">
+                        <Input
+                          type="tel"
+                          value={formData.phone}
+                          onChange={(e) => handleInputChange('phone', e.target.value)}
+                          className="rounded-xl border-2 focus:border-blue-500 transition-all duration-300 transform focus:scale-105 flex-1"
+                          placeholder="+7 (999) 123-45-67"
+                          required
+                          disabled={isPhoneVerified}
+                        />
+                        {!isPhoneVerified && formData.phone && (
+                          <Button
+                            type="button"
+                            onClick={generatePhoneCode}
+                            disabled={codeTimer > 0}
+                            className="bg-blue-500 hover:bg-blue-600 text-white rounded-xl px-4 text-sm"
+                          >
+                            {codeTimer > 0 ? `${codeTimer}s` : 'Код'}
+                          </Button>
+                        )}
+                        {isPhoneVerified && (
+                          <div className="flex items-center px-3 bg-green-100 rounded-xl">
+                            <Icon name="CheckCircle" size={16} className="text-green-600" />
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Поле для ввода кода */}
+                      {showCodeInput && (
+                        <div className="flex gap-2 mt-3">
+                          <Input
+                            value={formData.phoneCode}
+                            onChange={(e) => handleInputChange('phoneCode', e.target.value)}
+                            className="rounded-xl border-2 focus:border-green-500 transition-all duration-300 flex-1"
+                            placeholder="Введите код из SMS"
+                            maxLength={4}
+                          />
+                          <Button
+                            type="button"
+                            onClick={verifyPhoneCode}
+                            className="bg-green-500 hover:bg-green-600 text-white rounded-xl px-4"
+                          >
+                            <Icon name="Check" size={16} />
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -555,6 +661,72 @@ const Index = () => {
               {/* Шаг 4: Финансы */}
               {currentStep === 4 && (
                 <div className="space-y-6 animate-fade-in">
+                  {/* Калькулятор займа */}
+                  <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-200">
+                    <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                      <Icon name="Calculator" size={20} />
+                      Калькулятор займа
+                    </h3>
+                    
+                    {/* Сумма займа */}
+                    <div className="space-y-3 mb-6">
+                      <div className="flex justify-between items-center">
+                        <Label className="text-sm font-semibold text-gray-700">Сумма займа</Label>
+                        <span className="text-lg font-bold text-blue-600">{formData.loanAmount.toLocaleString()} ₽</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="5000"
+                        max="500000"
+                        step="5000"
+                        value={formData.loanAmount}
+                        onChange={(e) => handleInputChange('loanAmount', parseInt(e.target.value))}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                      />
+                      <div className="flex justify-between text-xs text-gray-500">
+                        <span>5 000 ₽</span>
+                        <span>500 000 ₽</span>
+                      </div>
+                    </div>
+                    
+                    {/* Срок займа */}
+                    <div className="space-y-3 mb-6">
+                      <div className="flex justify-between items-center">
+                        <Label className="text-sm font-semibold text-gray-700">Срок займа</Label>
+                        <span className="text-lg font-bold text-purple-600">{formData.loanTerm} дней</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="7"
+                        max="365"
+                        step="1"
+                        value={formData.loanTerm}
+                        onChange={(e) => handleInputChange('loanTerm', parseInt(e.target.value))}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                      />
+                      <div className="flex justify-between text-xs text-gray-500">
+                        <span>7 дней</span>
+                        <span>365 дней</span>
+                      </div>
+                    </div>
+                    
+                    {/* Расчет */}
+                    <div className="bg-white rounded-xl p-4 space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">К возврату:</span>
+                        <span className="font-bold text-green-600">{calculateLoan().totalAmount.toLocaleString()} ₽</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Переплата:</span>
+                        <span className="font-bold text-orange-600">{calculateLoan().overpayment.toLocaleString()} ₽</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Платеж в день:</span>
+                        <span className="font-bold text-blue-600">{Math.round(calculateLoan().dailyPayment).toLocaleString()} ₽</span>
+                      </div>
+                    </div>
+                  </div>
+                  
                   <div className="space-y-2">
                     <Label className="text-sm font-semibold text-gray-700">Место работы *</Label>
                     <Input
@@ -573,17 +745,6 @@ const Index = () => {
                       onChange={(e) => handleInputChange('income', e.target.value)}
                       className="rounded-xl border-2 focus:border-blue-500 transition-all duration-300 transform focus:scale-105"
                       placeholder="50000"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-gray-700">Желаемая сумма займа *</Label>
-                    <Input
-                      type="number"
-                      value={formData.loanAmount}
-                      onChange={(e) => handleInputChange('loanAmount', e.target.value)}
-                      className="rounded-xl border-2 focus:border-blue-500 transition-all duration-300 transform focus:scale-105"
-                      placeholder="100000"
                       required
                     />
                   </div>
