@@ -381,27 +381,44 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8">
-      <div className="max-w-2xl mx-auto px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 py-8 relative overflow-hidden">
+      {/* 3D фоновые элементы */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-blue-400/20 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-48 h-48 bg-purple-400/20 rounded-full blur-2xl animate-bounce" style={{animationDuration: '3s'}}></div>
+        <div className="absolute bottom-20 left-1/4 w-24 h-24 bg-cyan-400/20 rounded-full blur-lg animate-pulse" style={{animationDelay: '1s'}}></div>
+      </div>
+      
+      <div className="max-w-2xl mx-auto px-4 relative z-10">
         <form onSubmit={handleSubmit}>
-          {/* Прогресс-бар */}
+          {/* 3D Прогресс-бар */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-4">
               {[1, 2, 3, 4].map((step) => (
-                <div key={step} className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold transition-all duration-300 ${
+                <div key={step} className={`relative flex items-center justify-center w-12 h-12 rounded-full font-bold text-lg transition-all duration-500 transform ${
                   currentStep >= step 
-                    ? 'bg-blue-500 text-white shadow-lg transform scale-110' 
-                    : 'bg-gray-200 text-gray-400'
-                }`}>
-                  {step}
+                    ? 'bg-gradient-to-br from-cyan-400 to-blue-600 text-white shadow-2xl shadow-blue-500/50 scale-125 rotate-3' 
+                    : 'bg-gradient-to-br from-gray-600 to-gray-800 text-gray-300 shadow-lg'
+                } hover:scale-110`} style={{
+                  boxShadow: currentStep >= step 
+                    ? '0 8px 32px rgba(59, 130, 246, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2)'
+                    : '0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.1)'
+                }}>
+                  <span className="relative z-10">{step}</span>
+                  {currentStep >= step && (
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/20 to-transparent"></div>
+                  )}
                 </div>
               ))}
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="relative w-full h-3 bg-gray-800 rounded-full overflow-hidden shadow-inner">
               <div 
-                className="bg-blue-500 h-2 rounded-full transition-all duration-500"
+                className="h-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 rounded-full transition-all duration-700 ease-out relative"
                 style={{ width: `${(currentStep / 4) * 100}%` }}
-              ></div>
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-white/30 to-transparent rounded-full"></div>
+                <div className="absolute top-0 left-0 w-full h-1 bg-white/40 rounded-full"></div>
+              </div>
             </div>
           </div>
 
@@ -418,13 +435,19 @@ const Index = () => {
             </div>
           </div>
 
-          <Card className="shadow-2xl border-0 rounded-3xl bg-white/80 backdrop-blur-sm transform transition-all duration-500 hover:scale-[1.02]">
-            <CardHeader className="text-center pb-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-t-3xl">
-              <CardTitle className="text-3xl font-bold flex items-center justify-center gap-3">
-                <Icon name="CreditCard" size={32} />
+          <Card className="relative shadow-2xl border-0 rounded-3xl backdrop-blur-lg bg-gradient-to-br from-white/10 to-white/5 border border-white/20 transform transition-all duration-500 hover:scale-[1.02]" style={{
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+          }}>
+            {/* Блики и отражения */}
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/20 via-transparent to-transparent pointer-events-none"></div>
+            <div className="absolute top-0 left-1/4 w-1/2 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
+            
+            <CardHeader className="text-center pb-6 relative">
+              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent mb-4 drop-shadow-lg flex items-center justify-center gap-3">
+                <Icon name="CreditCard" size={32} className="text-cyan-400" />
                 Заявка на займ
               </CardTitle>
-              <p className="text-blue-100 mt-2">
+              <p className="text-white/80 text-sm backdrop-blur-sm bg-white/10 rounded-full px-4 py-2 inline-block border border-white/20">
                 {currentStep === 1 && "Личные данные"}
                 {currentStep === 2 && "Документы"}
                 {currentStep === 3 && "Контактная информация"}
@@ -432,30 +455,42 @@ const Index = () => {
               </p>
             </CardHeader>
 
-            <CardContent className="p-8 space-y-6">
+            <CardContent className="p-8 space-y-6 relative">
               {/* Шаг 1: Личные данные */}
               {currentStep === 1 && (
                 <div className="space-y-6 animate-fade-in">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label className="text-sm font-semibold text-gray-700">Имя *</Label>
-                      <Input
-                        value={formData.firstName}
-                        onChange={(e) => handleInputChange('firstName', e.target.value)}
-                        className="rounded-xl border-2 focus:border-blue-500 transition-all duration-300 transform focus:scale-105"
-                        placeholder="Введите имя"
-                        required
-                      />
+                      <Label className="text-sm font-semibold text-white/90 mb-2 block">Имя *</Label>
+                      <div className="relative">
+                        <Input
+                          value={formData.firstName}
+                          onChange={(e) => handleInputChange('firstName', e.target.value)}
+                          className="rounded-xl border-0 bg-white/10 backdrop-blur-sm text-white placeholder-white/50 focus:bg-white/20 transition-all duration-300 transform focus:scale-105 focus:shadow-2xl focus:shadow-blue-500/25 h-12"
+                          style={{
+                            boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1)'
+                          }}
+                          placeholder="Введите имя"
+                          required
+                        />
+                        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-white/5 to-transparent pointer-events-none"></div>
+                      </div>
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-sm font-semibold text-gray-700">Фамилия *</Label>
-                      <Input
-                        value={formData.lastName}
-                        onChange={(e) => handleInputChange('lastName', e.target.value)}
-                        className="rounded-xl border-2 focus:border-blue-500 transition-all duration-300 transform focus:scale-105"
-                        placeholder="Введите фамилию"
-                        required
-                      />
+                      <Label className="text-sm font-semibold text-white/90 mb-2 block">Фамилия *</Label>
+                      <div className="relative">
+                        <Input
+                          value={formData.lastName}
+                          onChange={(e) => handleInputChange('lastName', e.target.value)}
+                          className="rounded-xl border-0 bg-white/10 backdrop-blur-sm text-white placeholder-white/50 focus:bg-white/20 transition-all duration-300 transform focus:scale-105 focus:shadow-2xl focus:shadow-blue-500/25 h-12"
+                          style={{
+                            boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1)'
+                          }}
+                          placeholder="Введите фамилию"
+                          required
+                        />
+                        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-white/5 to-transparent pointer-events-none"></div>
+                      </div>
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -469,14 +504,20 @@ const Index = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-gray-700">Дата рождения *</Label>
-                    <Input
-                      type="date"
-                      value={formData.birthDate}
-                      onChange={(e) => handleInputChange('birthDate', e.target.value)}
-                      className="rounded-xl border-2 focus:border-blue-500 transition-all duration-300 transform focus:scale-105"
-                      required
-                    />
+                    <Label className="text-sm font-semibold text-white/90 mb-2 block">Дата рождения *</Label>
+                    <div className="relative">
+                      <Input
+                        type="date"
+                        value={formData.birthDate}
+                        onChange={(e) => handleInputChange('birthDate', e.target.value)}
+                        className="rounded-xl border-0 bg-white/10 backdrop-blur-sm text-white placeholder-white/50 focus:bg-white/20 transition-all duration-300 transform focus:scale-105 focus:shadow-2xl focus:shadow-blue-500/25 h-12"
+                        style={{
+                          boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1)'
+                        }}
+                        required
+                      />
+                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-white/5 to-transparent pointer-events-none"></div>
+                    </div>
                   </div>
                 </div>
               )}
