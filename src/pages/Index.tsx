@@ -328,6 +328,19 @@ const Index = () => {
             </div>
           </div>
 
+          {/* Логотип по центру */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-3 bg-white rounded-2xl px-8 py-4 shadow-xl border border-gray-100">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                <Icon name="Banknote" size={24} className="text-white" />
+              </div>
+              <div className="text-left">
+                <h1 className="text-2xl font-bold text-gray-800">Деньги в Дом</h1>
+                <p className="text-sm text-gray-500">Быстрые займы онлайн</p>
+              </div>
+            </div>
+          </div>
+
           <Card className="shadow-2xl border-0 rounded-3xl bg-white/80 backdrop-blur-sm transform transition-all duration-500 hover:scale-[1.02]">
             <CardHeader className="text-center pb-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-t-3xl">
               <CardTitle className="text-3xl font-bold flex items-center justify-center gap-3">
@@ -421,21 +434,69 @@ const Index = () => {
                   <div className="space-y-2">
                     <Label className="text-sm font-semibold text-gray-700">Фото паспорта *</Label>
                     <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-blue-500 transition-colors">
+                      {/* Скрытые инпуты для разных источников */}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        capture="environment"
+                        onChange={(e) => handleFileUpload(e.target.files?.[0])}
+                        className="hidden"
+                        id="passport-camera"
+                        required
+                      />
                       <input
                         type="file"
                         accept="image/*"
                         onChange={(e) => handleFileUpload(e.target.files?.[0])}
                         className="hidden"
-                        id="passport-upload"
+                        id="passport-gallery"
                         required
                       />
-                      <label htmlFor="passport-upload" className="cursor-pointer">
-                        <Icon name="Upload" size={32} className="mx-auto mb-2 text-gray-400" />
-                        <p className="text-gray-600">
-                          {formData.passportFile ? formData.passportFile.name : "Нажмите для загрузки фото"}
-                        </p>
-                        <p className="text-xs text-gray-400 mt-1">Поддерживаются JPG, PNG</p>
-                      </label>
+                      
+                      {formData.passportFile ? (
+                        <div className="space-y-4">
+                          <div className="relative w-32 h-24 mx-auto">
+                            <img 
+                              src={URL.createObjectURL(formData.passportFile)} 
+                              alt="Паспорт" 
+                              className="w-full h-full object-cover rounded-lg border-2 border-green-500"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleFileUpload(undefined)}
+                              className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600"
+                            >
+                              ×
+                            </button>
+                          </div>
+                          <p className="text-green-600 font-medium">{formData.passportFile.name}</p>
+                          <p className="text-xs text-gray-500">Файл загружен успешно</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <Icon name="FileImage" size={32} className="mx-auto text-gray-400" />
+                          <p className="text-gray-600 font-medium">Загрузите фото паспорта</p>
+                          
+                          {/* Кнопки для выбора источника */}
+                          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                            <label htmlFor="passport-camera" className="cursor-pointer">
+                              <div className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                <Icon name="Camera" size={16} />
+                                <span className="text-sm font-medium">Камера</span>
+                              </div>
+                            </label>
+                            
+                            <label htmlFor="passport-gallery" className="cursor-pointer">
+                              <div className="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                <Icon name="Image" size={16} />
+                                <span className="text-sm font-medium">Галерея</span>
+                              </div>
+                            </label>
+                          </div>
+                          
+                          <p className="text-xs text-gray-400">JPG, PNG до 10МБ</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
