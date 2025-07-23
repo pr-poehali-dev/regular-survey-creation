@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import Icon from "@/components/ui/icon";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useCountAnimation } from "@/hooks/useCountAnimation";
 
 interface FormData {
   // Личные данные
@@ -136,6 +137,13 @@ const Index = () => {
     
     return { totalAmount, overpayment, dailyPayment };
   };
+
+  // Анимированные значения для цифр
+  const { totalAmount, overpayment, dailyPayment } = calculateLoan();
+  const animatedTotalAmount = useCountAnimation(Math.round(totalAmount));
+  const animatedOverpayment = useCountAnimation(Math.round(overpayment));
+  const animatedDailyPayment = useCountAnimation(Math.round(dailyPayment));
+  const animatedLoanAmount = useCountAnimation(formData.loanAmount);
 
   const handleFileUpload = (file: File | undefined) => {
     setFormData(prev => ({ ...prev, passportFile: file }));
@@ -672,7 +680,7 @@ const Index = () => {
                     <div className="space-y-3 mb-6">
                       <div className="flex justify-between items-center">
                         <Label className="text-sm font-semibold text-gray-700">Сумма займа</Label>
-                        <span className="text-lg font-bold text-blue-600">{formData.loanAmount.toLocaleString()} ₽</span>
+                        <span className="text-lg font-bold text-blue-600">{animatedLoanAmount.toLocaleString()} ₽</span>
                       </div>
                       <input
                         type="range"
@@ -714,15 +722,15 @@ const Index = () => {
                     <div className="bg-white rounded-xl p-4 space-y-2">
                       <div className="flex justify-between">
                         <span className="text-gray-600">К возврату:</span>
-                        <span className="font-bold text-green-600">{calculateLoan().totalAmount.toLocaleString()} ₽</span>
+                        <span className="font-bold text-green-600">{animatedTotalAmount.toLocaleString()} ₽</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Переплата:</span>
-                        <span className="font-bold text-orange-600">{calculateLoan().overpayment.toLocaleString()} ₽</span>
+                        <span className="font-bold text-orange-600">{animatedOverpayment.toLocaleString()} ₽</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Платеж в день:</span>
-                        <span className="font-bold text-blue-600">{Math.round(calculateLoan().dailyPayment).toLocaleString()} ₽</span>
+                        <span className="font-bold text-blue-600">{animatedDailyPayment.toLocaleString()} ₽</span>
                       </div>
                     </div>
                   </div>
