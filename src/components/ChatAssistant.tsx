@@ -15,14 +15,25 @@ const ChatAssistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Привет! Я помощник по займам. Задавайте любые вопросы о условиях, процентах или процедуре оформления!',
+      text: 'Привет! Я помощник по займам. Выберите интересующий вопрос из списка ниже или задайте свой:',
       sender: 'bot',
       timestamp: new Date()
     }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [showQuickQuestions, setShowQuickQuestions] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const quickQuestions = [
+    '💰 Какая процентная ставка?',
+    '⏰ Какие сроки займа?',
+    '💸 Какая минимальная и максимальная сумма?',
+    '📄 Какие документы нужны?',
+    '⚡ Как быстро одобряют заявку?',
+    '💳 Как вернуть займ?',
+    '📞 Контакты поддержки'
+  ];
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -63,15 +74,20 @@ const ChatAssistant: React.FC = () => {
       return 'Добро пожаловать! Готов ответить на все ваши вопросы о займах. Что вас интересует?';
     }
     
+    if (message.includes('контакт') || message.includes('поддержк') || message.includes('телефон')) {
+      return 'Служба поддержки работает круглосуточно:\n📞 8-800-555-0123 (бесплатно)\n📧 support@zaim.ru\n💬 Онлайн-чат на сайте';
+    }
+    
     return 'Спасибо за ваш вопрос! Наши специалисты работают над улучшением сервиса. Если у вас срочный вопрос, обратитесь к нашему оператору по телефону 8-800-555-0123.';
   };
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
+  const handleSendMessage = async (messageText?: string) => {
+    const textToSend = messageText || inputValue;
+    if (!textToSend.trim()) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: inputValue,
+      text: textToSend,
       sender: 'user',
       timestamp: new Date()
     };
@@ -79,12 +95,13 @@ const ChatAssistant: React.FC = () => {
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
+    setShowQuickQuestions(false);
 
     // Имитация задержки ответа бота
     setTimeout(() => {
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: getBotResponse(inputValue),
+        text: getBotResponse(textToSend),
         sender: 'bot',
         timestamp: new Date()
       };
@@ -92,6 +109,11 @@ const ChatAssistant: React.FC = () => {
       setMessages(prev => [...prev, botResponse]);
       setIsTyping(false);
     }, 1000 + Math.random() * 1000);
+  };
+
+  const handleQuickQuestion = (question: string) => {
+    const cleanQuestion = question.replace(/^[💰⏰💸📄⚡💳📞]\s/, '');
+    handleSendMessage(cleanQuestion);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -163,6 +185,24 @@ const ChatAssistant: React.FC = () => {
             </div>
           ))}
           
+          {/* Быстрые вопросы */}
+          {showQuickQuestions && messages.length === 1 && (
+            <div className="space-y-2">
+              <p className="text-xs text-gray-500 text-center">Популярные вопросы:</p>
+              <div className="grid grid-cols-1 gap-2">
+                {quickQuestions.map((question, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleQuickQuestion(question)}
+                    className="text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-xl border border-blue-200 transition-colors duration-200 text-sm text-gray-700 hover:text-blue-700"
+                  >
+                    {question}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          
           {/* Индикатор печати */}
           {isTyping && (
             <div className="flex justify-start">
@@ -191,7 +231,7 @@ const ChatAssistant: React.FC = () => {
               disabled={isTyping}
             />
             <Button
-              onClick={handleSendMessage}
+              onClick={() => handleSendMessage()}
               disabled={!inputValue.trim() || isTyping}
               className="px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-600 transition-colors"
             >
