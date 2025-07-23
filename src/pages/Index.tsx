@@ -7,6 +7,7 @@ import Icon from "@/components/ui/icon";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useCountAnimation } from "@/hooks/useCountAnimation";
+import ChatAssistant from "@/components/ChatAssistant";
 
 interface FormData {
   // Личные данные
@@ -808,6 +809,9 @@ const Index = () => {
           </Card>
         </form>
       </div>
+      
+      {/* Чат-помощник */}
+      <ChatAssistant />
     </div>
   );
 };
