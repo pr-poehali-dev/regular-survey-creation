@@ -6,9 +6,11 @@ import Icon from '@/components/ui/icon';
 
 interface CardBindingStepProps {
   onSuccess: () => void;
+  onSubmit: () => void;
+  isSubmitting: boolean;
 }
 
-const CardBindingStep: React.FC<CardBindingStepProps> = ({ onSuccess }) => {
+const CardBindingStep: React.FC<CardBindingStepProps> = ({ onSuccess, onSubmit, isSubmitting }) => {
   const [cardNumber, setCardNumber] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
@@ -48,10 +50,8 @@ const CardBindingStep: React.FC<CardBindingStepProps> = ({ onSuccess }) => {
     setIsValidating(false);
     setIsValidated(true);
     
-    // Через 1 секунду показываем успех
-    setTimeout(() => {
-      onSuccess();
-    }, 1000);
+    // Вызываем onSuccess сразу после валидации
+    onSuccess();
   };
 
   const isFormValid = cardNumber.replace(/\s/g, '').length === 16 && 
@@ -61,12 +61,32 @@ const CardBindingStep: React.FC<CardBindingStepProps> = ({ onSuccess }) => {
 
   if (isValidated) {
     return (
-      <div className="text-center space-y-4 py-8 animate-fade-in">
+      <div className="text-center space-y-6 py-8 animate-fade-in">
         <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
           <Icon name="CheckCircle" size={40} className="text-green-600" />
         </div>
-        <h3 className="text-xl font-bold text-green-600">Карта успешно привязана!</h3>
-        <p className="text-gray-600">Теперь вы можете получить займ на эту карту</p>
+        <div className="space-y-2">
+          <h3 className="text-xl font-bold text-green-600">Карта успешно привязана!</h3>
+          <p className="text-gray-600">Теперь вы можете получить займ на эту карту</p>
+        </div>
+        
+        <Button
+          onClick={onSubmit}
+          disabled={isSubmitting}
+          className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white py-3 mt-6"
+        >
+          {isSubmitting ? (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              Отправляем заявку...
+            </div>
+          ) : (
+            <div className="flex items-center justify-center gap-2">
+              <Icon name="Send" size={16} />
+              Отправить заявку
+            </div>
+          )}
+        </Button>
       </div>
     );
   }

@@ -241,7 +241,11 @@ const Index = () => {
 
             <CardContent className="p-8 space-y-6">
               {currentStep === 5 ? (
-                <CardBindingStep onSuccess={handleCardBindingSuccess} />
+                <CardBindingStep 
+                  onSuccess={handleCardBindingSuccess} 
+                  onSubmit={handleSubmit}
+                  isSubmitting={isSubmitting}
+                />
               ) : (
                 <FormSteps 
                   currentStep={currentStep}
