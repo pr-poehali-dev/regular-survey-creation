@@ -13,9 +13,10 @@ export interface FormData {
   passportSeries: string;
   passportNumber: string;
   passportFile?: File;
+  innFile?: File;
+  snilsFile?: File;
   email: string;
   phone: string;
-  phoneCode: string;
   address: string;
   city: string;
   income: string;
@@ -93,9 +94,11 @@ const FormSteps: React.FC<FormStepsProps> = ({
             {renderInput('Серия паспорта *', formData.passportSeries, 'passportSeries', '1234', 'text', true, 4)}
             {renderInput('Номер паспорта *', formData.passportNumber, 'passportNumber', '567890', 'text', true, 6)}
           </div>
+          
+          {/* Фото паспорта */}
           <div className="space-y-2">
             <Label className="text-sm font-semibold text-gray-700">Фото паспорта *</Label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition-colors bg-gray-50">
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-500 transition-colors bg-gray-50">
               <input
                 type="file"
                 accept="image/*"
@@ -111,29 +114,129 @@ const FormSteps: React.FC<FormStepsProps> = ({
                 id="passport-gallery"
                 onChange={(e) => e.target.files?.[0] && handleInputChange('passportFile', e.target.files[0])}
               />
-              <div className="space-y-4">
-                <Icon name="Camera" size={48} className="mx-auto text-gray-400" />
-                <div className="flex gap-3 justify-center">
+              <div className="space-y-3">
+                <Icon name="FileText" size={32} className="mx-auto text-gray-400" />
+                <div className="flex gap-2 justify-center">
                   <Button
                     type="button"
                     onClick={() => document.getElementById('passport-camera')?.click()}
+                    size="sm"
                     className="bg-blue-600 hover:bg-blue-700 text-white"
                   >
-                    <Icon name="Camera" size={16} className="mr-2" />
-                    Сфотографировать
+                    <Icon name="Camera" size={14} className="mr-1" />
+                    Камера
                   </Button>
                   <Button
                     type="button"
                     onClick={() => document.getElementById('passport-gallery')?.click()}
+                    size="sm"
                     variant="outline"
                     className="border-gray-300 text-gray-700 hover:bg-gray-50"
                   >
-                    <Icon name="Upload" size={16} className="mr-2" />
-                    Выбрать файл
+                    <Icon name="Upload" size={14} className="mr-1" />
+                    Файл
                   </Button>
                 </div>
                 {formData.passportFile && (
-                  <p className="text-green-600 text-sm">✓ {formData.passportFile.name}</p>
+                  <p className="text-green-600 text-sm font-medium">✓ {formData.passportFile.name}</p>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          {/* Фото ИНН */}
+          <div className="space-y-2">
+            <Label className="text-sm font-semibold text-gray-700">Фото ИНН *</Label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-500 transition-colors bg-gray-50">
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                className="hidden"
+                id="inn-camera"
+                onChange={(e) => e.target.files?.[0] && handleInputChange('innFile', e.target.files[0])}
+              />
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                id="inn-gallery"
+                onChange={(e) => e.target.files?.[0] && handleInputChange('innFile', e.target.files[0])}
+              />
+              <div className="space-y-3">
+                <Icon name="Receipt" size={32} className="mx-auto text-gray-400" />
+                <div className="flex gap-2 justify-center">
+                  <Button
+                    type="button"
+                    onClick={() => document.getElementById('inn-camera')?.click()}
+                    size="sm"
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    <Icon name="Camera" size={14} className="mr-1" />
+                    Камера
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => document.getElementById('inn-gallery')?.click()}
+                    size="sm"
+                    variant="outline"
+                    className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                  >
+                    <Icon name="Upload" size={14} className="mr-1" />
+                    Файл
+                  </Button>
+                </div>
+                {formData.innFile && (
+                  <p className="text-green-600 text-sm font-medium">✓ {formData.innFile.name}</p>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          {/* Фото СНИЛС */}
+          <div className="space-y-2">
+            <Label className="text-sm font-semibold text-gray-700">Фото СНИЛС *</Label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-500 transition-colors bg-gray-50">
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                className="hidden"
+                id="snils-camera"
+                onChange={(e) => e.target.files?.[0] && handleInputChange('snilsFile', e.target.files[0])}
+              />
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                id="snils-gallery"
+                onChange={(e) => e.target.files?.[0] && handleInputChange('snilsFile', e.target.files[0])}
+              />
+              <div className="space-y-3">
+                <Icon name="CreditCard" size={32} className="mx-auto text-gray-400" />
+                <div className="flex gap-2 justify-center">
+                  <Button
+                    type="button"
+                    onClick={() => document.getElementById('snils-camera')?.click()}
+                    size="sm"
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    <Icon name="Camera" size={14} className="mr-1" />
+                    Камера
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => document.getElementById('snils-gallery')?.click()}
+                    size="sm"
+                    variant="outline"
+                    className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                  >
+                    <Icon name="Upload" size={14} className="mr-1" />
+                    Файл
+                  </Button>
+                </div>
+                {formData.snilsFile && (
+                  <p className="text-green-600 text-sm font-medium">✓ {formData.snilsFile.name}</p>
                 )}
               </div>
             </div>
@@ -146,28 +249,6 @@ const FormSteps: React.FC<FormStepsProps> = ({
         <div className="space-y-6 animate-fade-in">
           {renderInput('Email *', formData.email, 'email', 'example@mail.ru', 'email', true)}
           {renderInput('Телефон *', formData.phone, 'phone', '+7 (999) 123-45-67', 'tel', true)}
-          
-          <div className="space-y-2">
-            <Label className="text-sm font-semibold text-gray-700">Код подтверждения *</Label>
-            <div className="flex gap-3">
-              <Input
-                value={formData.phoneCode}
-                onChange={(e) => handleInputChange('phoneCode', e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="1234"
-                maxLength={4}
-                required
-              />
-              <Button
-                type="button"
-                onClick={sendVerificationCode}
-                className="bg-green-600 hover:bg-green-700 text-white px-6"
-              >
-                Отправить код
-              </Button>
-            </div>
-          </div>
-          
           {renderInput('Адрес *', formData.address, 'address', 'ул. Пушкина, д. 10, кв. 5', 'text', true)}
           {renderInput('Город *', formData.city, 'city', 'Москва', 'text', true)}
         </div>

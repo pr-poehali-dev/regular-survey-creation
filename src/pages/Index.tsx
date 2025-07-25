@@ -8,6 +8,7 @@ import StepProgressBar from "@/components/loan/StepProgressBar";
 import FormSteps, { FormData } from "@/components/loan/FormSteps";
 import ProcessingScreen from "@/components/loan/ProcessingScreen";
 import ResultScreen from "@/components/loan/ResultScreen";
+import CardBindingStep from "@/components/loan/CardBindingStep";
 
 type SubmitStatus = 'idle' | 'processing' | 'approved' | 'rejected';
 
@@ -21,7 +22,6 @@ const Index = () => {
     passportNumber: '',
     email: '',
     phone: '',
-    phoneCode: '',
     address: '',
     city: '',
     income: '',
@@ -35,9 +35,7 @@ const Index = () => {
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingTimer, setProcessingTimer] = useState(60);
-  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
-  const [showCodeInput, setShowCodeInput] = useState(false);
-  const [codeTimer, setCodeTimer] = useState(0);
+  const [showCardBinding, setShowCardBinding] = useState(false);
   const { toast } = useToast();
 
   const handleInputChange = (field: keyof FormData, value: string | number | File) => {
@@ -64,7 +62,7 @@ const Index = () => {
   };
 
   const nextStep = () => {
-    if (currentStep < 4) {
+    if (currentStep < 5) {
       setCurrentStep(prev => prev + 1);
     }
   };
@@ -75,21 +73,16 @@ const Index = () => {
     }
   };
 
-  const sendVerificationCode = () => {
-    setShowCodeInput(true);
-    setCodeTimer(60);
+  const handleCardBindingSuccess = () => {
+    setShowCardBinding(false);
     toast({
-      title: "Код отправлен",
-      description: "Проверьте SMS на указанном номере",
+      title: "Карта привязана",
+      description: "Теперь вы можете получить займ",
     });
+    nextStep();
   };
 
-  useEffect(() => {
-    if (codeTimer > 0) {
-      const timer = setTimeout(() => setCodeTimer(prev => prev - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [codeTimer]);
+
 
   useEffect(() => {
     if (isProcessing && processingTimer > 0) {
@@ -167,7 +160,6 @@ const Index = () => {
       passportNumber: '',
       email: '',
       phone: '',
-      phoneCode: '',
       address: '',
       city: '',
       income: '',
@@ -180,9 +172,7 @@ const Index = () => {
     setIsSubmitting(false);
     setIsProcessing(false);
     setProcessingTimer(60);
-    setIsPhoneVerified(false);
-    setShowCodeInput(false);
-    setCodeTimer(0);
+    setShowCardBinding(false);
   };
 
   const getStepTitle = () => {
@@ -191,6 +181,7 @@ const Index = () => {
       case 2: return "Документы";
       case 3: return "Контактная информация";
       case 4: return "Финансовая информация";
+      case 5: return "Привязка карты";
       default: return "Заявка на займ";
     }
   };
@@ -201,6 +192,7 @@ const Index = () => {
       case 2: return "Загрузите документы";
       case 3: return "Укажите контакты";
       case 4: return "Выберите параметры займа";
+      case 5: return "Привяжите карту для получения займа";
       default: return "";
     }
   };
@@ -233,7 +225,7 @@ const Index = () => {
           </div>
 
           {/* Прогресс-бар с пульсацией */}
-          <StepProgressBar currentStep={currentStep} totalSteps={4} />
+          <StepProgressBar currentStep={currentStep} totalSteps={5} />
 
           <Card className="bg-white rounded-2xl shadow-lg border border-gray-200">
             
@@ -248,13 +240,16 @@ const Index = () => {
             </CardHeader>
 
             <CardContent className="p-8 space-y-6">
-              <FormSteps 
-                currentStep={currentStep}
-                formData={formData}
-                handleInputChange={handleInputChange}
-                calculateLoan={calculateLoan}
-                sendVerificationCode={sendVerificationCode}
-              />
+              {currentStep === 5 ? (
+                <CardBindingStep onSuccess={handleCardBindingSuccess} />
+              ) : (
+                <FormSteps 
+                  currentStep={currentStep}
+                  formData={formData}
+                  handleInputChange={handleInputChange}
+                  calculateLoan={calculateLoan}
+                />
+              )}
 
               {/* Навигация */}
               <div className="flex justify-between pt-8">
@@ -280,7 +275,16 @@ const Index = () => {
                       Далее
                       <Icon name="ChevronRight" size={16} className="ml-2" />
                     </Button>
-                  ) : (
+                  ) : currentStep === 4 ? (
+                    <Button
+                      type="button"
+                      onClick={nextStep}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
+                    >
+                      К привязке карты
+                      <Icon name="ChevronRight" size={16} className="ml-2" />
+                    </Button>
+                  ) : currentStep === 5 ? null : (
                     <Button
                       type="submit"
                       disabled={isSubmitting}
