@@ -29,6 +29,8 @@ const Index = () => {
     city: '',
     income: '',
     workplace: '',
+    workAddress: '',
+    workPhone: '',
     loanAmount: 50000,
     loanTerm: 30
   });
@@ -164,6 +166,8 @@ const Index = () => {
             Паспорт: ${data.passportSeries} ${data.passportNumber}
             Город: ${data.city}
             Место работы: ${data.workplace}
+            Адрес работы: ${data.workAddress}
+            Рабочий телефон: ${data.workPhone}
             Доход: ${data.income}
             Сумма займа: ${data.loanAmount}
           `,
@@ -192,6 +196,8 @@ const Index = () => {
       city: '',
       income: '',
       workplace: '',
+      workAddress: '',
+      workPhone: '',
       loanAmount: 50000,
       loanTerm: 30
     });

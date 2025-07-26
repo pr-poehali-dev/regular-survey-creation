@@ -21,6 +21,8 @@ export interface FormData {
   city: string;
   income: string;
   workplace: string;
+  workAddress: string;
+  workPhone: string;
   loanAmount: number;
   loanTerm: number;
 }
@@ -257,74 +259,25 @@ const FormSteps: React.FC<FormStepsProps> = ({
       {/* Шаг 4: Финансовые данные */}
       {currentStep === 4 && (
         <div className="space-y-6 animate-fade-in">
-          {/* Калькулятор займа */}
-          <div className="bg-blue-50 rounded-2xl p-6 border border-blue-200">
+          <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
             <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-              <Icon name="Calculator" size={20} className="text-blue-600" />
-              Калькулятор займа
+              <Icon name="Briefcase" size={20} className="text-blue-600" />
+              Рабочая информация
             </h3>
-            
-            {/* Сумма займа */}
-            <div className="space-y-3 mb-6">
-              <div className="flex justify-between items-center">
-                <Label className="text-sm font-semibold text-gray-700">Сумма займа</Label>
-                <span className="text-lg font-bold text-blue-600">{animatedLoanAmount.toLocaleString()} ₽</span>
-              </div>
-              <input
-                type="range"
-                min="5000"
-                max="500000"
-                step="5000"
-                value={formData.loanAmount}
-                onChange={(e) => handleInputChange('loanAmount', parseInt(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-              />
-              <div className="flex justify-between text-xs text-gray-500">
-                <span>5 000 ₽</span>
-                <span>500 000 ₽</span>
-              </div>
-            </div>
-            
-            {/* Срок займа */}
-            <div className="space-y-3 mb-6">
-              <div className="flex justify-between items-center">
-                <Label className="text-sm font-semibold text-gray-700">Срок займа</Label>
-                <span className="text-lg font-bold text-purple-600">{formData.loanTerm} дней</span>
-              </div>
-              <input
-                type="range"
-                min="7"
-                max="365"
-                step="1"
-                value={formData.loanTerm}
-                onChange={(e) => handleInputChange('loanTerm', parseInt(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-              />
-              <div className="flex justify-between text-xs text-gray-500">
-                <span>7 дней</span>
-                <span>365 дней</span>
-              </div>
-            </div>
-            
-            {/* Расчет */}
-            <div className="bg-white rounded-xl p-4 space-y-2 border border-gray-200">
-              <div className="flex justify-between">
-                <span className="text-gray-600">К возврату:</span>
-                <span className="font-bold text-green-600">{animatedTotalAmount.toLocaleString()} ₽</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Переплата:</span>
-                <span className="font-bold text-orange-600">{animatedOverpayment.toLocaleString()} ₽</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Платеж в день:</span>
-                <span className="font-bold text-blue-600">{animatedDailyPayment.toLocaleString()} ₽</span>
-              </div>
+            <div className="space-y-4">
+              {renderInput('Место работы *', formData.workplace, 'workplace', 'ООО "Компания"', 'text', true)}
+              {renderInput('Адрес работы *', formData.workAddress, 'workAddress', 'ул. Рабочая, д. 1, оф. 101', 'text', true)}
+              {renderInput('Рабочий телефон *', formData.workPhone, 'workPhone', '+7 (495) 123-45-67', 'tel', true)}
             </div>
           </div>
           
-          {renderInput('Место работы *', formData.workplace, 'workplace', 'Название организации', 'text', true)}
-          {renderInput('Ежемесячный доход *', formData.income, 'income', '50000', 'number', true)}
+          <div className="bg-green-50 rounded-xl p-6 border border-green-200">
+            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <Icon name="Banknote" size={20} className="text-green-600" />
+              Доходы
+            </h3>
+            {renderInput('Ежемесячный доход *', formData.income, 'income', '50000', 'number', true)}
+          </div>
         </div>
       )}
     </>
