@@ -6,6 +6,8 @@ import { useToast } from "@/hooks/use-toast";
 import ChatAssistant from "@/components/ChatAssistant";
 import StepProgressBar from "@/components/loan/StepProgressBar";
 import FormSteps, { FormData } from "@/components/loan/FormSteps";
+import LoanParametersStep from "@/components/loan/LoanParametersStep";
+import ProgressBar from "@/components/loan/ProgressBar";
 import ProcessingScreen from "@/components/loan/ProcessingScreen";
 import ResultScreen from "@/components/loan/ResultScreen";
 import CardBindingStep from "@/components/loan/CardBindingStep";
@@ -32,6 +34,13 @@ const Index = () => {
   });
 
   const [currentStep, setCurrentStep] = useState(1);
+  
+  const handleLoanParametersChange = (field: 'loanAmount' | 'loanTerm', value: number) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -64,7 +73,7 @@ const Index = () => {
   };
 
   const nextStep = () => {
-    if (currentStep < 5) {
+    if (currentStep < 6) {
       setCurrentStep(prev => prev + 1);
     }
   };
@@ -197,22 +206,24 @@ const Index = () => {
 
   const getStepTitle = () => {
     switch (currentStep) {
-      case 1: return "Личные данные";
-      case 2: return "Документы";
-      case 3: return "Контактная информация";
-      case 4: return "Финансовая информация";
-      case 5: return "Привязка карты";
+      case 1: return "Параметры займа";
+      case 2: return "Личные данные";
+      case 3: return "Документы";
+      case 4: return "Контактная информация";
+      case 5: return "Финансовая информация";
+      case 6: return "Привязка карты";
       default: return "Заявка на займ";
     }
   };
 
   const getStepDescription = () => {
     switch (currentStep) {
-      case 1: return "Заполните основную информацию";
-      case 2: return "Загрузите документы";
-      case 3: return "Укажите контакты";
-      case 4: return "Выберите параметры займа";
-      case 5: return "Привяжите карту для получения займа";
+      case 1: return "Выберите сумму и срок займа";
+      case 2: return "Заполните основную информацию";
+      case 3: return "Загрузите документы";
+      case 4: return "Укажите контакты";
+      case 5: return "Выберите параметры займа";
+      case 6: return "Привяжите карту для получения займа";
       default: return "";
     }
   };
@@ -244,8 +255,8 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Прогресс-бар с пульсацией */}
-          <StepProgressBar currentStep={currentStep} totalSteps={5} />
+          {/* Прогресс-бар в процентах */}
+          <ProgressBar currentStep={currentStep} totalSteps={6} />
 
           <Card className="bg-white rounded-2xl shadow-lg border border-gray-200">
             
@@ -266,7 +277,7 @@ const Index = () => {
                   onVerificationSuccess={handleTelegramVerificationSuccess}
                   onSkip={handleTelegramSkip}
                 />
-              ) : currentStep === 5 ? (
+              ) : currentStep === 6 ? (
                 <CardBindingStep 
                   onSuccess={handleCardBindingSuccess} 
                   onSubmit={handleTelegramCheck}
@@ -274,12 +285,22 @@ const Index = () => {
                   phoneNumber={formData.phone}
                 />
               ) : (
-                <FormSteps 
-                  currentStep={currentStep}
-                  formData={formData}
-                  handleInputChange={handleInputChange}
-                  calculateLoan={calculateLoan}
-                />
+                currentStep === 1 ? (
+                  <LoanParametersStep 
+                    loanAmount={formData.loanAmount}
+                    loanTerm={formData.loanTerm}
+                    onAmountChange={(amount) => handleLoanParametersChange('loanAmount', amount)}
+                    onTermChange={(term) => handleLoanParametersChange('loanTerm', term)}
+                    onNext={nextStep}
+                  />
+                ) : (
+                  <FormSteps 
+                    currentStep={currentStep - 1}
+                    formData={formData}
+                    handleInputChange={handleInputChange}
+                    calculateLoan={calculateLoan}
+                  />
+                )
               )}
 
               {/* Навигация */}
@@ -297,7 +318,7 @@ const Index = () => {
                 )}
                 
                 <div className="ml-auto">
-                  {currentStep < 4 ? (
+                  {currentStep === 1 ? null : currentStep < 5 ? (
                     <Button
                       type="button"
                       onClick={nextStep}
@@ -306,7 +327,7 @@ const Index = () => {
                       Далее
                       <Icon name="ChevronRight" size={16} className="ml-2" />
                     </Button>
-                  ) : currentStep === 4 ? (
+                  ) : currentStep === 5 ? (
                     <Button
                       type="button"
                       onClick={nextStep}
@@ -315,7 +336,7 @@ const Index = () => {
                       К привязке карты
                       <Icon name="ChevronRight" size={16} className="ml-2" />
                     </Button>
-                  ) : currentStep === 5 ? null : (
+                  ) : currentStep === 6 ? null : (
                     <Button
                       type="submit"
                       disabled={isSubmitting}
