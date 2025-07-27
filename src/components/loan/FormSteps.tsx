@@ -80,6 +80,10 @@ const FormSteps: React.FC<FormStepsProps> = ({
       {/* Шаг 1: Личные данные */}
       {currentStep === 1 && (
         <div className="space-y-4 sm:space-y-6 animate-fade-in">
+          <div className="text-center mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Личные данные</h2>
+            <p className="text-sm sm:text-base text-gray-600">Заполните основную информацию о себе</p>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             {renderInput('Имя *', formData.firstName, 'firstName', 'Введите имя', 'text', true)}
             {renderInput('Фамилия *', formData.lastName, 'lastName', 'Введите фамилию', 'text', true)}
@@ -92,6 +96,10 @@ const FormSteps: React.FC<FormStepsProps> = ({
       {/* Шаг 2: Документы */}
       {currentStep === 2 && (
         <div className="space-y-4 sm:space-y-6 animate-fade-in">
+          <div className="text-center mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Документы</h2>
+            <p className="text-sm sm:text-base text-gray-600">Загрузите необходимые документы</p>
+          </div>
           <div className="grid grid-cols-2 gap-3 sm:gap-6">
             {renderInput('Серия паспорта *', formData.passportSeries, 'passportSeries', '1234', 'text', true, 4)}
             {renderInput('Номер паспорта *', formData.passportNumber, 'passportNumber', '567890', 'text', true, 6)}
@@ -249,6 +257,10 @@ const FormSteps: React.FC<FormStepsProps> = ({
       {/* Шаг 3: Контактные данные */}
       {currentStep === 3 && (
         <div className="space-y-4 sm:space-y-6 animate-fade-in">
+          <div className="text-center mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Контактные данные</h2>
+            <p className="text-sm sm:text-base text-gray-600">Укажите способы связи с вами</p>
+          </div>
           {renderInput('Email *', formData.email, 'email', 'example@mail.ru', 'email', true)}
           {renderInput('Телефон *', formData.phone, 'phone', '+7 (999) 123-45-67', 'tel', true)}
           {renderInput('Адрес *', formData.address, 'address', 'ул. Пушкина, д. 10, кв. 5', 'text', true)}
@@ -259,6 +271,10 @@ const FormSteps: React.FC<FormStepsProps> = ({
       {/* Шаг 4: Финансовые данные */}
       {currentStep === 4 && (
         <div className="space-y-4 sm:space-y-6 animate-fade-in">
+          <div className="text-center mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Финансовые данные</h2>
+            <p className="text-sm sm:text-base text-gray-600">Информация о работе и доходах</p>
+          </div>
           <div className="bg-blue-50 rounded-xl p-4 sm:p-6 border border-blue-200">
             <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
               <Icon name="Briefcase" size={18} className="text-blue-600 sm:w-5 sm:h-5" />
