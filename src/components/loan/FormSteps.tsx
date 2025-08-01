@@ -62,12 +62,12 @@ const FormSteps: React.FC<FormStepsProps> = ({
     maxLength?: number
   ) => (
     <div className="space-y-2">
-      <Label className="text-sm sm:text-base font-semibold text-gray-700">{label}</Label>
+      <Label className="text-sm sm:text-base font-semibold text-gray-800">{label}</Label>
       <Input
         type={type}
         value={value}
         onChange={(e) => handleInputChange(field, e.target.value)}
-        className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-base sm:text-sm"
+        className="w-full px-4 py-3 sm:py-2 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base sm:text-sm bg-white/90 backdrop-blur-sm shadow-sm hover:border-blue-300"
         placeholder={placeholder}
         required={required}
         maxLength={maxLength}
@@ -80,9 +80,9 @@ const FormSteps: React.FC<FormStepsProps> = ({
       {/* Шаг 1: Личные данные */}
       {currentStep === 1 && (
         <div className="space-y-4 sm:space-y-6 animate-fade-in">
-          <div className="text-center mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Личные данные</h2>
-            <p className="text-sm sm:text-base text-gray-600">Заполните основную информацию о себе</p>
+          <div className="text-center mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Личные данные</h2>
+            <p className="text-base sm:text-lg text-gray-700 font-medium">Заполните основную информацию о себе</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             {renderInput('Имя *', formData.firstName, 'firstName', 'Введите имя', 'text', true)}
@@ -96,9 +96,9 @@ const FormSteps: React.FC<FormStepsProps> = ({
       {/* Шаг 2: Документы */}
       {currentStep === 2 && (
         <div className="space-y-4 sm:space-y-6 animate-fade-in">
-          <div className="text-center mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Документы</h2>
-            <p className="text-sm sm:text-base text-gray-600">Загрузите необходимые документы</p>
+          <div className="text-center mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Документы</h2>
+            <p className="text-base sm:text-lg text-gray-700 font-medium">Загрузите необходимые документы</p>
           </div>
           <div className="grid grid-cols-2 gap-3 sm:gap-6">
             {renderInput('Серия паспорта *', formData.passportSeries, 'passportSeries', '1234', 'text', true, 4)}
@@ -257,9 +257,9 @@ const FormSteps: React.FC<FormStepsProps> = ({
       {/* Шаг 3: Контактные данные */}
       {currentStep === 3 && (
         <div className="space-y-4 sm:space-y-6 animate-fade-in">
-          <div className="text-center mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Контактные данные</h2>
-            <p className="text-sm sm:text-base text-gray-600">Укажите способы связи с вами</p>
+          <div className="text-center mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Контактные данные</h2>
+            <p className="text-base sm:text-lg text-gray-700 font-medium">Укажите способы связи с вами</p>
           </div>
           {renderInput('Email *', formData.email, 'email', 'example@mail.ru', 'email', true)}
           {renderInput('Телефон *', formData.phone, 'phone', '+7 (999) 123-45-67', 'tel', true)}
@@ -271,9 +271,9 @@ const FormSteps: React.FC<FormStepsProps> = ({
       {/* Шаг 4: Финансовые данные */}
       {currentStep === 4 && (
         <div className="space-y-4 sm:space-y-6 animate-fade-in">
-          <div className="text-center mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Финансовые данные</h2>
-            <p className="text-sm sm:text-base text-gray-600">Информация о работе и доходах</p>
+          <div className="text-center mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Финансовые данные</h2>
+            <p className="text-base sm:text-lg text-gray-700 font-medium">Информация о работе и доходах</p>
           </div>
           <div className="bg-blue-50 rounded-xl p-4 sm:p-6 border border-blue-200">
             <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
