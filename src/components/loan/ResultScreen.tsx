@@ -80,6 +80,26 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ submitStatus, resetForm }) 
                 <p className="text-lg text-green-700 mb-6 font-medium">
                   Поздравляем! Ваша заявка успешно прошла проверку.
                 </p>
+                
+                {/* Номер карты */}
+                <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-6 mb-6 text-white">
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <Icon name="CreditCard" size={28} className="text-white" />
+                    <p className="font-bold text-xl">
+                      Ваша карта готова!
+                    </p>
+                  </div>
+                  <div className="bg-white/20 rounded-xl p-4 backdrop-blur-sm">
+                    <p className="text-lg font-mono tracking-wider mb-2">
+                      **** **** **** 4521
+                    </p>
+                    <div className="flex justify-between text-sm">
+                      <span>Действительна до: 12/29</span>
+                      <span>VISA</span>
+                    </div>
+                  </div>
+                </div>
+                
                 <div className="bg-green-100 rounded-2xl p-6 mb-8">
                   <div className="flex items-center justify-center gap-3 mb-3">
                     <Icon name="Phone" size={24} className="text-green-600" />
@@ -88,7 +108,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ submitStatus, resetForm }) 
                     </p>
                   </div>
                   <p className="text-green-700 text-base">
-                    в течении 15 минут
+                    в течении 15 минут для получения карты
                   </p>
                 </div>
               </>
