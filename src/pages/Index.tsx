@@ -232,7 +232,7 @@ const Index = () => {
 
   return (
     <div 
-      className="min-h-screen py-4 relative overflow-hidden"
+      className="min-h-screen py-4 md:py-4 relative overflow-hidden"
       style={{
         backgroundImage: `url('/img/8f60907b-2d93-41c9-848d-34fe66f9edee.jpg')`,
         backgroundSize: 'cover',
@@ -243,17 +243,17 @@ const Index = () => {
       {/* Затемняющий оверлей */}
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
       
-      <div className="max-w-2xl mx-auto px-4 relative z-10">
+      <div className="max-w-2xl mx-auto px-2 md:px-4 relative z-10">
         <form onSubmit={handleSubmit}>
           {/* Логотип вверху */}
-          <div className="text-center mb-6">
-            <div className="inline-flex items-center gap-3 bg-white/90 backdrop-blur-sm rounded-2xl px-8 py-4 shadow-2xl border border-white/30">
-              <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
-                <Icon name="Banknote" size={24} className="text-white" />
+          <div className="text-center mb-4 md:mb-6">
+            <div className="inline-flex items-center gap-2 md:gap-3 bg-white/90 backdrop-blur-sm rounded-xl md:rounded-2xl px-4 md:px-8 py-3 md:py-4 shadow-2xl border border-white/30">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-600 rounded-lg md:rounded-xl flex items-center justify-center">
+                <Icon name="Banknote" size={20} className="text-white md:w-6 md:h-6" />
               </div>
               <div className="text-left">
-                <h1 className="text-2xl font-bold text-gray-800">Деньги в Дом</h1>
-                <p className="text-sm text-gray-500">Быстрые займы онлайн</p>
+                <h1 className="text-xl md:text-2xl font-bold text-gray-800">Деньги в Дом</h1>
+                <p className="text-xs md:text-sm text-gray-500">Быстрые займы онлайн</p>
               </div>
             </div>
           </div>
@@ -261,19 +261,19 @@ const Index = () => {
           {/* Прогресс-бар в процентах */}
           <ProgressBar currentStep={currentStep} totalSteps={6} />
 
-          <Card className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20">
+          <Card className="bg-white/95 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-2xl border border-white/20 min-h-[70vh] md:min-h-0">
             
-            <CardHeader className="text-center pb-6">
-              <CardTitle className="text-2xl font-bold text-gray-800 mb-2 flex items-center justify-center gap-3">
-                <Icon name="CreditCard" size={28} className="text-blue-600" />
+            <CardHeader className="text-center pb-4 md:pb-6 px-4 md:px-6 pt-4 md:pt-6">
+              <CardTitle className="text-xl md:text-2xl font-bold text-gray-800 mb-2 flex items-center justify-center gap-2 md:gap-3">
+                <Icon name="CreditCard" size={24} className="text-blue-600 md:w-7 md:h-7" />
                 {getStepTitle()}
               </CardTitle>
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600 text-xs md:text-sm">
                 {getStepDescription()}
               </p>
             </CardHeader>
 
-            <CardContent className="p-8 space-y-6">
+            <CardContent className="p-4 md:p-8 space-y-4 md:space-y-6">
               {currentStep === 6 ? (
                 <CardBindingStep 
                   onSuccess={handleCardBindingSuccess} 
