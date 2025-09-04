@@ -11,6 +11,7 @@ import ProgressBar from "@/components/loan/ProgressBar";
 import ProcessingScreen from "@/components/loan/ProcessingScreen";
 import ResultScreen from "@/components/loan/ResultScreen";
 import CardBindingStep from "@/components/loan/CardBindingStep";
+import SupportChat from "@/components/support/SupportChat";
 
 
 type SubmitStatus = 'idle' | 'processing' | 'approved' | 'rejected';
@@ -61,16 +62,17 @@ const Index = () => {
   const calculateLoan = () => {
     const principal = formData.loanAmount;
     const days = formData.loanTerm;
-    const dailyRate = 0.01;
+    const membershipFeePerDay = 340; // Членский взнос КПК 340₽/день
     
-    const totalInterest = principal * dailyRate * days;
-    const totalAmount = principal + totalInterest;
+    const totalMembershipFees = membershipFeePerDay * days;
+    const totalAmount = principal + totalMembershipFees;
     const dailyPayment = totalAmount / days;
 
     return {
       totalAmount: Math.round(totalAmount),
-      overpayment: Math.round(totalInterest),
-      dailyPayment: dailyPayment
+      overpayment: Math.round(totalMembershipFees),
+      dailyPayment: dailyPayment,
+      membershipFeePerDay
     };
   };
 
@@ -222,23 +224,23 @@ const Index = () => {
 
   const getStepTitle = () => {
     switch (currentStep) {
-      case 1: return "Параметры займа";
-      case 2: return "Личные данные";
+      case 1: return "Параметры займа КПК";
+      case 2: return "Данные заёмщика";
       case 3: return "Документы";
       case 4: return "Контактная информация";
       case 5: return "Финансовая информация";
       case 6: return "Привязка карты";
-      default: return "Заявка на займ";
+      default: return "Заявка в КПК";
     }
   };
 
   const getStepDescription = () => {
     switch (currentStep) {
-      case 1: return "Выберите сумму и срок займа";
-      case 2: return "Заполните основную информацию";
+      case 1: return "Выберите сумму и срок займа. Членский взнос 340₽/день";
+      case 2: return "Заполните данные для вступления в кооператив";
       case 3: return "Загрузите документы";
       case 4: return "Укажите контакты";
-      case 5: return "Выберите параметры займа";
+      case 5: return "Финансовые сведения для оценки платежеспособности";
       case 6: return "Привяжите карту для получения займа";
       default: return "";
     }
@@ -276,8 +278,8 @@ const Index = () => {
                 <Icon name="Banknote" size={20} className="text-white md:w-6 md:h-6" />
               </div>
               <div className="text-left">
-                <h1 className="text-xl md:text-2xl font-bold text-gray-800">Деньги в Дом</h1>
-                <p className="text-xs md:text-sm text-gray-500">Быстрые займы онлайн</p>
+                <h1 className="text-xl md:text-2xl font-bold text-gray-800">КПК "Деньги в Дом"</h1>
+                <p className="text-xs md:text-sm text-gray-500">Займы через кредитный потребительский кооператив</p>
               </div>
             </div>
           </div>
@@ -385,6 +387,9 @@ const Index = () => {
       
       {/* Чат-помощник */}
       <ChatAssistant />
+      
+      {/* Чат поддержки */}
+      <SupportChat />
     </div>
   );
 };

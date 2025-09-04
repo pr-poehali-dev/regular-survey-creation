@@ -75,10 +75,10 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ submitStatus, resetForm }) 
             {isApproved ? (
               <>
                 <h2 className="text-2xl sm:text-3xl font-bold text-green-800 mb-4">
-                  🎉 Заявка одобрена!
+                  🎉 Заявка в КПК одобрена!
                 </h2>
                 <p className="text-lg text-green-700 mb-6 font-medium">
-                  Поздравляем! Ваша заявка успешно прошла проверку.
+                  Поздравляем! Вы приняты в КПК "Деньги в Дом".
                 </p>
                 
                 {/* Номер карты */}
@@ -209,7 +209,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ submitStatus, resetForm }) 
                     </div>
                     <div className="text-left">
                       <p className="font-bold text-gray-900">Нужна консультация?</p>
-                      <p className="text-gray-700">8-800-555-0123 (бесплатно)</p>
+                      <p className="text-gray-700">+7(800) 2727-28-28 (бесплатно)</p>
                     </div>
                   </div>
                 </CardContent>
