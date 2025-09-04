@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-import ChatAssistant from "@/components/ChatAssistant";
+
 import StepProgressBar from "@/components/loan/StepProgressBar";
 import FormSteps, { FormData } from "@/components/loan/FormSteps";
 import LoanParametersStep from "@/components/loan/LoanParametersStep";
@@ -384,9 +384,6 @@ const Index = () => {
           </Card>
         </form>
       </div>
-      
-      {/* Чат-помощник */}
-      <ChatAssistant />
       
       {/* Чат поддержки */}
       <SupportChat />
