@@ -94,6 +94,19 @@ const Index = () => {
     });
   };
 
+  // Проверка долга ФССП
+  const checkFsspDebt = async (fullName: string, birthDate: string): Promise<number> => {
+    // Имитация запроса к ФССП API
+    // В реальном проекте здесь будет запрос к API ФССП
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // Имитируем случайную сумму долга для демонстрации
+        const randomDebt = Math.floor(Math.random() * 50000);
+        resolve(randomDebt);
+      }, 2000);
+    });
+  };
+
 
 
 
@@ -120,8 +133,19 @@ const Index = () => {
     setIsProcessing(true);
     setProcessingTimer(60);
 
-    // Отправка данных в Bitrix24
+    // Проверка долга ФССП перед отправкой
     try {
+      const fullName = `${formData.lastName} ${formData.firstName} ${formData.middleName}`.trim();
+      const debt = await checkFsspDebt(fullName, formData.birthDate);
+      
+      if (debt > 30000) {
+        setIsProcessing(false);
+        setSubmitStatus('rejected');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Отправка данных в Bitrix24 только если долг менее 30000
       await sendToBitrix24(formData);
     } catch (error) {
       console.error('Ошибка отправки:', error);

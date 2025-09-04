@@ -128,7 +128,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ submitStatus, resetForm }) 
                     </p>
                   </div>
                   <p className="text-red-700 text-base">
-                    Неподходящая кредитная история или текущие обязательства
+                    Неподходящая кредитная история, текущие обязательства или превышен лимит долга ФССП (более 30 000 ₽)
                   </p>
                 </div>
               </>
