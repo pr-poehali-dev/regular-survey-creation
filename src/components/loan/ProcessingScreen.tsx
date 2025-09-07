@@ -23,7 +23,7 @@ const ProcessingScreen: React.FC<ProcessingScreenProps> = ({ processingTimer }) 
 
   return (
     <div 
-      className="min-h-screen flex items-center justify-center py-4 relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center py-6 relative overflow-hidden"
       style={{
         backgroundImage: `url('/img/8f60907b-2d93-41c9-848d-34fe66f9edee.jpg')`,
         backgroundSize: 'cover',
@@ -31,60 +31,80 @@ const ProcessingScreen: React.FC<ProcessingScreenProps> = ({ processingTimer }) 
         backgroundRepeat: 'no-repeat'
       }}
     >
-      {/* Затемняющий оверлей */}
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+      {/* Современный градиентный оверлей */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-blue-900/30 to-indigo-900/40 backdrop-blur-sm" />
       
-      <Card className="w-full max-w-lg mx-4 bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/30 relative z-10">
-        <CardContent className="p-8 sm:p-12 text-center">
-          <div className="mb-8">
-            {/* Анимированная иконка */}
-            <div className="w-28 h-28 mx-auto mb-8 relative">
-              <div className="absolute inset-0 border-4 border-green-200 rounded-full animate-pulse"></div>
-              <div className="absolute inset-2 border-4 border-gradient-to-r from-blue-500 to-green-500 rounded-full animate-spin border-t-transparent"></div>
-              <div className="absolute inset-4 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center">
-                <Icon name={getStatusIcon()} size={32} className="text-white" />
+      <Card className="w-full max-w-2xl mx-4 bg-white/98 backdrop-blur-lg rounded-3xl shadow-3xl border border-white/40 relative z-10 hover:shadow-4xl transition-all duration-500">
+        <CardContent className="p-10 sm:p-16 text-center">
+          <div className="mb-10">
+            {/* Современная анимированная иконка */}
+            <div className="w-36 h-36 mx-auto mb-10 relative">
+              <div className="absolute inset-0 border-4 border-gradient-to-r from-blue-200 to-green-200 rounded-full animate-pulse shadow-lg"></div>
+              <div className="absolute inset-3 border-4 border-gradient-to-r from-blue-500 to-green-500 rounded-full animate-spin border-t-transparent shadow-md"></div>
+              <div className="absolute inset-6 bg-gradient-to-br from-blue-500 via-blue-600 to-green-500 rounded-full flex items-center justify-center shadow-xl">
+                <Icon name={getStatusIcon()} size={40} className="text-white" />
               </div>
+              {/* Дополнительные кольца */}
+              <div className="absolute inset-1 border-2 border-blue-100 rounded-full animate-ping opacity-20"></div>
             </div>
             
-            {/* Заголовок */}
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-              🚀 Обрабатываем заявку
-            </h2>
-            
-            {/* Динамический статус */}
-            <p className="text-lg text-gray-700 mb-6 font-medium">
-              {getStatusText()}
-            </p>
-            
-            {/* Таймер */}
-            <div className="bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent text-4xl font-mono font-bold mb-4">
-              {Math.floor(processingTimer / 60)}:{(processingTimer % 60).toString().padStart(2, '0')}
+            {/* Современный заголовок */}
+            <div className="mb-8">
+              <div className="inline-flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-green-500 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-lg">🚀</span>
+                </div>
+                <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                  Обрабатываем заявку
+                </h2>
+              </div>
+              
+              {/* Динамический статус */}
+              <p className="text-xl text-gray-700 mb-8 font-semibold leading-relaxed">
+                {getStatusText()}
+              </p>
             </div>
             
-            {/* Прогресс бар */}
-            <div className="w-full bg-gray-200 rounded-full h-3 mb-6">
-              <div 
-                className="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-1000 shadow-sm"
-                style={{ width: `${((60 - processingTimer) / 60) * 100}%` }}
-              ></div>
+            {/* Современный таймер */}
+            <div className="bg-white/90 rounded-2xl p-6 mb-8 shadow-lg border border-gray-100">
+              <div className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent text-5xl font-mono font-bold mb-4">
+                {Math.floor(processingTimer / 60)}:{(processingTimer % 60).toString().padStart(2, '0')}
+              </div>
+              
+              {/* Улучшенный прогресс бар */}
+              <div className="w-full bg-gray-200 rounded-full h-4 mb-2 shadow-inner">
+                <div 
+                  className="bg-gradient-to-r from-blue-500 via-blue-600 to-green-500 h-4 rounded-full transition-all duration-1000 shadow-md relative overflow-hidden"
+                  style={{ width: `${((60 - processingTimer) / 60) * 100}%` }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+                </div>
+              </div>
+              <p className="text-sm text-gray-600 font-medium">{Math.round(((60 - processingTimer) / 60) * 100)}% завершено</p>
             </div>
             
-            {/* Информационные блоки */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-              <div className="bg-blue-50 rounded-xl p-4">
-                <Icon name="Shield" size={20} className="text-blue-600 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-gray-800">Безопасно</p>
-                <p className="text-xs text-gray-600">SSL защита</p>
+            {/* Современные информационные блоки */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-2xl p-6 shadow-lg border border-blue-100 hover:shadow-xl transition-all duration-300">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-md">
+                  <Icon name="Shield" size={24} className="text-white" />
+                </div>
+                <p className="text-base font-bold text-gray-800 mb-2">Безопасно</p>
+                <p className="text-sm text-gray-600 font-medium">SSL защита</p>
               </div>
-              <div className="bg-green-50 rounded-xl p-4">
-                <Icon name="Zap" size={20} className="text-green-600 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-gray-800">Быстро</p>
-                <p className="text-xs text-gray-600">До 15 минут</p>
+              <div className="bg-gradient-to-br from-green-50 to-green-100/50 rounded-2xl p-6 shadow-lg border border-green-100 hover:shadow-xl transition-all duration-300">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-md">
+                  <Icon name="Zap" size={24} className="text-white" />
+                </div>
+                <p className="text-base font-bold text-gray-800 mb-2">Быстро</p>
+                <p className="text-sm text-gray-600 font-medium">До 15 минут</p>
               </div>
-              <div className="bg-purple-50 rounded-xl p-4">
-                <Icon name="Star" size={20} className="text-purple-600 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-gray-800">Надёжно</p>
-                <p className="text-xs text-gray-600">Лицензия ЦБ</p>
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-2xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-md">
+                  <Icon name="Star" size={24} className="text-white" />
+                </div>
+                <p className="text-base font-bold text-gray-800 mb-2">Надёжно</p>
+                <p className="text-sm text-gray-600 font-medium">Лицензия ЦБ</p>
               </div>
             </div>
           </div>

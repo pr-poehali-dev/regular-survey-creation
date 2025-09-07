@@ -271,15 +271,15 @@ const Index = () => {
       
       <div className="max-w-2xl mx-auto px-2 md:px-4 relative z-10">
         <form onSubmit={handleSubmit}>
-          {/* Логотип вверху */}
-          <div className="text-center mb-4 md:mb-6">
-            <div className="inline-flex items-center gap-2 md:gap-3 bg-white/90 backdrop-blur-sm rounded-xl md:rounded-2xl px-4 md:px-8 py-3 md:py-4 shadow-2xl border border-white/30">
-              <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-600 rounded-lg md:rounded-xl flex items-center justify-center">
-                <Icon name="Banknote" size={20} className="text-white md:w-6 md:h-6" />
+          {/* Современный логотип */}
+          <div className="text-center mb-6 md:mb-8">
+            <div className="inline-flex items-center gap-3 md:gap-4 bg-white/95 backdrop-blur-md rounded-2xl md:rounded-3xl px-6 md:px-10 py-4 md:py-6 shadow-2xl border border-white/40 hover:shadow-3xl transition-all duration-300">
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg">
+                <Icon name="Banknote" size={24} className="text-white md:w-8 md:h-8" />
               </div>
               <div className="text-left">
-                <h1 className="text-xl md:text-2xl font-bold text-gray-800">КПК "Деньги в Дом"</h1>
-                <p className="text-xs md:text-sm text-gray-500">Займы через кредитный потребительский кооператив</p>
+                <h1 className="text-xl md:text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">КПК "Деньги в Дом"</h1>
+                <p className="text-sm md:text-base text-gray-600 font-medium">Займы через кредитный потребительский кооператив</p>
               </div>
             </div>
           </div>
@@ -287,19 +287,21 @@ const Index = () => {
           {/* Прогресс-бар в процентах */}
           <ProgressBar currentStep={currentStep} totalSteps={6} />
 
-          <Card className="bg-white/95 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-2xl border border-white/20 min-h-[70vh] md:min-h-0">
+          <Card className="bg-white/98 backdrop-blur-lg rounded-2xl md:rounded-3xl shadow-2xl border border-white/30 min-h-[70vh] md:min-h-0 hover:shadow-3xl transition-all duration-300">
             
-            <CardHeader className="text-center pb-4 md:pb-6 px-4 md:px-6 pt-4 md:pt-6">
-              <CardTitle className="text-xl md:text-2xl font-bold text-gray-800 mb-2 flex items-center justify-center gap-2 md:gap-3">
-                <Icon name="CreditCard" size={24} className="text-blue-600 md:w-7 md:h-7" />
-                {getStepTitle()}
+            <CardHeader className="text-center pb-6 md:pb-8 px-6 md:px-8 pt-6 md:pt-8 bg-gradient-to-br from-gray-50/50 to-white/50 rounded-t-2xl md:rounded-t-3xl border-b border-gray-100">
+              <CardTitle className="text-2xl md:text-3xl font-bold mb-3 flex items-center justify-center gap-3 md:gap-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-lg">
+                  <Icon name="CreditCard" size={20} className="text-white md:w-6 md:h-6" />
+                </div>
+                <span className="bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">{getStepTitle()}</span>
               </CardTitle>
-              <p className="text-gray-600 text-xs md:text-sm">
+              <p className="text-gray-600 text-sm md:text-base font-medium leading-relaxed max-w-md mx-auto">
                 {getStepDescription()}
               </p>
             </CardHeader>
 
-            <CardContent className="p-4 md:p-8 space-y-4 md:space-y-6">
+            <CardContent className="p-6 md:p-10 space-y-6 md:space-y-8">
               {currentStep === 6 ? (
                 <CardBindingStep 
                   onSuccess={handleCardBindingSuccess} 
@@ -326,16 +328,16 @@ const Index = () => {
                 )
               )}
 
-              {/* Навигация */}
-              <div className="flex justify-between pt-8">
+              {/* Современная навигация */}
+              <div className="flex justify-between items-center pt-8 md:pt-10 border-t border-gray-100">
                 {currentStep > 1 && (
                   <Button
                     type="button"
                     onClick={prevStep}
                     variant="outline"
-                    className="px-6 py-2 border-gray-300 text-gray-700 hover:bg-gray-50"
+                    className="px-8 py-3 md:py-4 text-sm md:text-base border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 rounded-xl shadow-sm transition-all duration-200 font-medium"
                   >
-                    <Icon name="ChevronLeft" size={16} className="mr-2" />
+                    <Icon name="ChevronLeft" size={18} className="mr-2" />
                     Назад
                   </Button>
                 )}
@@ -345,34 +347,34 @@ const Index = () => {
                     <Button
                       type="button"
                       onClick={nextStep}
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
+                      className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-3 md:py-4 text-sm md:text-base rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
                     >
                       Далее
-                      <Icon name="ChevronRight" size={16} className="ml-2" />
+                      <Icon name="ChevronRight" size={18} className="ml-2" />
                     </Button>
                   ) : currentStep === 5 ? (
                     <Button
                       type="button"
                       onClick={nextStep}
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
+                      className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-3 md:py-4 text-sm md:text-base rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
                     >
                       К привязке карты
-                      <Icon name="ChevronRight" size={16} className="ml-2" />
+                      <Icon name="ChevronRight" size={18} className="ml-2" />
                     </Button>
                   ) : currentStep === 6 ? null : (
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-6 py-2"
+                      className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-3 md:py-4 text-sm md:text-base rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
                     >
                       {isSubmitting ? (
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <div className="flex items-center gap-3">
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                           Отправляем...
                         </div>
                       ) : (
                         <div className="flex items-center">
-                          <Icon name="Send" size={16} className="mr-2" />
+                          <Icon name="Send" size={18} className="mr-2" />
                           Подать заявку
                         </div>
                       )}
