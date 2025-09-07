@@ -12,6 +12,7 @@ import ProcessingScreen from "@/components/loan/ProcessingScreen";
 import ResultScreen from "@/components/loan/ResultScreen";
 import CardBindingStep from "@/components/loan/CardBindingStep";
 import SupportChat from "@/components/support/SupportChat";
+import Footer from "@/components/Footer";
 
 
 type SubmitStatus = 'idle' | 'processing' | 'approved' | 'rejected';
@@ -389,6 +390,9 @@ const Index = () => {
       
       {/* Чат поддержки */}
       <SupportChat />
+      
+      {/* Подвал */}
+      <Footer />
     </div>
   );
 };
