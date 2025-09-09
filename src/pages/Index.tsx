@@ -13,6 +13,7 @@ import ResultScreen from "@/components/loan/ResultScreen";
 import CardBindingStep from "@/components/loan/CardBindingStep";
 import SupportChat from "@/components/support/SupportChat";
 import Footer from "@/components/Footer";
+import ApprovedLoanScreen from "@/components/loan/ApprovedLoanScreen";
 
 
 type SubmitStatus = 'idle' | 'processing' | 'approved' | 'rejected';
@@ -252,8 +253,13 @@ const Index = () => {
     return <ProcessingScreen processingTimer={processingTimer} />;
   }
 
-  // Экран результата
-  if (submitStatus === 'approved' || submitStatus === 'rejected') {
+  // Экран одобренного займа
+  if (submitStatus === 'approved') {
+    return <ApprovedLoanScreen resetForm={resetForm} />;
+  }
+
+  // Экран отклоненной заявки
+  if (submitStatus === 'rejected') {
     return <ResultScreen submitStatus={submitStatus} resetForm={resetForm} />;
   }
 
