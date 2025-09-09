@@ -255,7 +255,7 @@ const Index = () => {
 
   // Экран одобренного займа
   if (submitStatus === 'approved') {
-    return <ApprovedLoanScreen resetForm={resetForm} />;
+    return <ApprovedLoanScreen resetForm={resetForm} formData={formData} />;
   }
 
   // Экран отклоненной заявки
