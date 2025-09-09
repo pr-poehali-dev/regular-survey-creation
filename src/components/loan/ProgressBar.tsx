@@ -16,14 +16,70 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, totalSteps }) =>
   ];
 
   return (
-    <div className="w-full mb-8 px-4">
-      {/* Шаги с круглыми цифрами */}
-      <div className="flex items-center justify-center">
+    <div className="w-full mb-6 px-2 md:px-4">
+      {/* Компактная версия для мобильных */}
+      <div className="block md:hidden">
+        {/* Верхняя линия прогресса */}
+        <div className="flex justify-between items-center mb-3">
+          <span className="text-sm font-medium text-gray-600">
+            Шаг {currentStep} из {totalSteps}
+          </span>
+          <span className="text-sm font-bold text-blue-600">
+            {Math.round((currentStep / totalSteps) * 100)}%
+          </span>
+        </div>
+        
+        {/* Горизонтальная полоса прогресса */}
+        <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
+          <div 
+            className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-700 ease-out relative"
+            style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+          >
+            <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-full animate-pulse"></div>
+          </div>
+        </div>
+        
+        {/* Компактные круглые шаги */}
+        <div className="flex justify-between items-center">
+          {stepLabels.map((label, index) => {
+            const stepNumber = index + 1;
+            const isCompleted = stepNumber < currentStep;
+            const isCurrent = stepNumber === currentStep;
+            
+            return (
+              <div key={index} className="flex flex-col items-center">
+                <div 
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
+                    isCompleted 
+                      ? 'bg-green-500 text-white' 
+                      : isCurrent 
+                        ? 'bg-blue-500 text-white ring-2 ring-blue-200' 
+                        : 'bg-gray-200 text-gray-500'
+                  }`}
+                >
+                  {isCompleted ? '✓' : stepNumber}
+                </div>
+                <span className={`text-xs mt-1 font-medium text-center leading-tight max-w-12 transition-colors duration-300 ${
+                  isCompleted 
+                    ? 'text-green-600' 
+                    : isCurrent 
+                      ? 'text-blue-600 font-semibold' 
+                      : 'text-gray-400'
+                }`}>
+                  {label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Полная версия для планшетов и десктопа */}
+      <div className="hidden md:flex items-center justify-center">
         {stepLabels.map((label, index) => {
           const stepNumber = index + 1;
           const isCompleted = stepNumber < currentStep;
           const isCurrent = stepNumber === currentStep;
-          const isUpcoming = stepNumber > currentStep;
           
           return (
             <div key={index} className="flex items-center">
