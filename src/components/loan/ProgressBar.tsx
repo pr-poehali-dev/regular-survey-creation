@@ -6,68 +6,74 @@ interface ProgressBarProps {
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, totalSteps }) => {
-  const progressPercentage = Math.round((currentStep / totalSteps) * 100);
-  
   const stepLabels = [
     'Параметры',
     'Личные данные', 
+    'Документы',
     'Контакты',
-    'Паспорт',
-    'Банковская карта'
+    'Финансы',
+    'Карта'
   ];
 
   return (
-    <div className="w-full mb-8">
-      {/* Основной прогресс-бар */}
-      <div className="relative">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-medium text-gray-700">
-            Шаг {currentStep} из {totalSteps}
-          </span>
-          <span className="text-sm font-bold text-green-600">
-            {progressPercentage}%
-          </span>
-        </div>
-        
-        <div className="w-full bg-gray-200 rounded-full h-3">
-          <div 
-            className="bg-gradient-to-r from-green-500 to-green-600 h-3 rounded-full transition-all duration-500 ease-in-out relative"
-            style={{ width: `${progressPercentage}%` }}
-          >
-            {/* Анимированный блик */}
-            <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-white to-transparent opacity-30 rounded-full animate-pulse"></div>
-          </div>
-        </div>
-      </div>
-
-      {/* Список шагов */}
-      <div className="mt-4 grid grid-cols-5 gap-2 text-xs">
+    <div className="w-full mb-8 px-4">
+      {/* Шаги с круглыми цифрами */}
+      <div className="flex items-center justify-center">
         {stepLabels.map((label, index) => {
           const stepNumber = index + 1;
           const isCompleted = stepNumber < currentStep;
           const isCurrent = stepNumber === currentStep;
+          const isUpcoming = stepNumber > currentStep;
           
           return (
-            <div 
-              key={index}
-              className={`text-center p-2 rounded-lg transition-all duration-300 ${
-                isCompleted 
-                  ? 'bg-green-100 text-green-700 font-medium' 
-                  : isCurrent 
-                    ? 'bg-blue-100 text-blue-700 font-semibold ring-2 ring-blue-300' 
-                    : 'bg-gray-100 text-gray-500'
-              }`}
-            >
-              <div className={`mb-1 w-6 h-6 rounded-full mx-auto flex items-center justify-center text-xs font-bold ${
-                isCompleted 
-                  ? 'bg-green-500 text-white' 
-                  : isCurrent 
-                    ? 'bg-blue-500 text-white' 
-                    : 'bg-gray-300 text-gray-600'
-              }`}>
-                {isCompleted ? '✓' : stepNumber}
+            <div key={index} className="flex items-center">
+              {/* Круглая цифра */}
+              <div className="flex flex-col items-center">
+                <div 
+                  className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500 transform ${
+                    isCompleted 
+                      ? 'bg-green-500 text-white scale-110 shadow-lg animate-pulse' 
+                      : isCurrent 
+                        ? 'bg-blue-500 text-white scale-125 shadow-xl ring-4 ring-blue-200 animate-bounce' 
+                        : 'bg-gray-200 text-gray-500 scale-100'
+                  }`}
+                  style={{
+                    animationDuration: isCurrent ? '2s' : '1s',
+                    animationIterationCount: isCurrent ? 'infinite' : '1'
+                  }}
+                >
+                  {isCompleted ? '✓' : stepNumber}
+                </div>
+                
+                {/* Название шага */}
+                <span className={`text-xs mt-2 font-medium transition-colors duration-300 ${
+                  isCompleted 
+                    ? 'text-green-600' 
+                    : isCurrent 
+                      ? 'text-blue-600 font-semibold' 
+                      : 'text-gray-400'
+                }`}>
+                  {label}
+                </span>
               </div>
-              <span className="block leading-tight">{label}</span>
+              
+              {/* Соединительная линия */}
+              {index < stepLabels.length - 1 && (
+                <div className={`h-1 w-12 mx-2 transition-all duration-700 ${
+                  stepNumber < currentStep 
+                    ? 'bg-gradient-to-r from-green-400 to-green-500 animate-pulse' 
+                    : stepNumber === currentStep
+                      ? 'bg-gradient-to-r from-blue-400 to-gray-200'
+                      : 'bg-gray-200'
+                }`} 
+                style={{
+                  background: stepNumber < currentStep 
+                    ? 'linear-gradient(to right, #10b981, #059669)' 
+                    : stepNumber === currentStep
+                      ? 'linear-gradient(to right, #3b82f6, #e5e7eb)'
+                      : '#e5e7eb'
+                }} />
+              )}
             </div>
           );
         })}

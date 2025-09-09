@@ -264,28 +264,19 @@ const Index = () => {
   }
 
   return (
-    <div 
-      className="min-h-screen py-4 md:py-4 relative overflow-hidden"
-      style={{
-        backgroundImage: `url('/img/8f60907b-2d93-41c9-848d-34fe66f9edee.jpg')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}
-    >
-      {/* Затемняющий оверлей */}
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+    <div className="min-h-screen py-4 md:py-4 bg-gray-50">
+      {/* Белый фон без изображения */}
       
-      <div className="max-w-2xl mx-auto px-2 md:px-4 relative z-10">
+      <div className="max-w-2xl mx-auto px-2 md:px-4">
         <form onSubmit={handleSubmit}>
           {/* Современный логотип */}
           <div className="text-center mb-6 md:mb-8">
-            <div className="inline-flex items-center gap-3 md:gap-4 bg-white/95 backdrop-blur-md rounded-2xl md:rounded-3xl px-6 md:px-10 py-4 md:py-6 shadow-2xl border border-white/40 hover:shadow-3xl transition-all duration-300">
+            <div className="inline-flex items-center gap-3 md:gap-4 bg-white rounded-2xl md:rounded-3xl px-6 md:px-10 py-4 md:py-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300">
               <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg">
                 <Icon name="Banknote" size={24} className="text-white md:w-8 md:h-8" />
               </div>
               <div className="text-left">
-                <h1 className="text-xl md:text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">КПК "Деньги в Дом"</h1>
+                <h1 className="text-xl md:text-3xl font-bold text-gray-800">КПК "Деньги в Дом"</h1>
                 <p className="text-sm md:text-base text-gray-600 font-medium">Займы через кредитный потребительский кооператив</p>
               </div>
             </div>
@@ -294,14 +285,14 @@ const Index = () => {
           {/* Прогресс-бар в процентах */}
           <ProgressBar currentStep={currentStep} totalSteps={6} />
 
-          <Card className="bg-white/98 backdrop-blur-lg rounded-2xl md:rounded-3xl shadow-2xl border border-white/30 min-h-[70vh] md:min-h-0 hover:shadow-3xl transition-all duration-300">
+          <Card className="bg-white rounded-2xl md:rounded-3xl shadow-lg border border-gray-200 min-h-[70vh] md:min-h-0 hover:shadow-xl transition-all duration-300">
             
-            <CardHeader className="text-center pb-6 md:pb-8 px-6 md:px-8 pt-6 md:pt-8 bg-gradient-to-br from-gray-50/50 to-white/50 rounded-t-2xl md:rounded-t-3xl border-b border-gray-100">
+            <CardHeader className="text-center pb-6 md:pb-8 px-6 md:px-8 pt-6 md:pt-8 bg-white rounded-t-2xl md:rounded-t-3xl border-b border-gray-100">
               <CardTitle className="text-2xl md:text-3xl font-bold mb-3 flex items-center justify-center gap-3 md:gap-4">
                 <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-lg">
                   <Icon name="CreditCard" size={20} className="text-white md:w-6 md:h-6" />
                 </div>
-                <span className="bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">{getStepTitle()}</span>
+                <span className="text-gray-800">{getStepTitle()}</span>
               </CardTitle>
               <p className="text-gray-600 text-sm md:text-base font-medium leading-relaxed max-w-md mx-auto">
                 {getStepDescription()}
